@@ -1,7 +1,7 @@
 # Личный проект «Шесть городов»
 
 * Студент: [Dima Samoshkin](https://up.htmlacademy.ru/nodejs-api/3/user/127168).
-* Наставник: `Неизвестно`.
+* Наставник: [Владимир Якушкин](https://htmlacademy.ru/profile/id126208).
 
 ---
 
