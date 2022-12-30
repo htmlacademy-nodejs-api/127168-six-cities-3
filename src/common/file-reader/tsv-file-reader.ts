@@ -12,7 +12,7 @@ export default class TSVFileReader implements FileReaderInterface {
   constructor (public filename: string) {}
 
   public read(): void {
-    this.rawData = readFileSync(this.rawData, 'utf-8');
+    this.rawData = readFileSync(this.filename,'utf8');
   }
 
   public toArray(): RentOffer[] {
