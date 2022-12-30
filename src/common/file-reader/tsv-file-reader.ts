@@ -28,7 +28,7 @@ export default class TSVFileReader implements FileReaderInterface {
         title, description, postDate, city, preview,
         photos, premium, favorite, rating, propertyType,
         numRooms, numGuests, price, amenities, numComments,
-        coordinates, username, email, password, userStatus
+        coordinates, username, email, avatar, password, userStatus
       ]) => ({
         title,
         description,
@@ -47,12 +47,16 @@ export default class TSVFileReader implements FileReaderInterface {
         price: Number.parseInt(price, 10),
         amenities: amenities.split(';').map((amenitie) => Amenities[amenitie as keyof typeof Amenities]),
         numComments: Number.parseInt(numComments, 10),
-        coordinates: [Number.parseFloat(coordinates.split(';')[0]), Number.parseFloat(coordinates.split(';')[1])],
+        coordinates: [
+          Number.parseFloat(coordinates.split(';')[0]),
+          Number.parseFloat(coordinates.split(';')[1])
+        ],
         user: {
           username,
           email,
+          avatar,
           password,
-          userStatus: UserStatus[userStatus as keyof typeof UserStatus]
+          userStatus: UserStatus[userStatus as keyof typeof UserStatus],
         }
       }));
   }
