@@ -2,7 +2,7 @@ import { CliCommandInterface } from './cli-command.interface.js';
 import got from 'got';
 import { MockData } from '../types/mock-data.type.js';
 import RentOfferGenerator from '../common/rent-offer-generator/rent-offer-generator.js';
-import { appendFile } from 'fs/promises';
+import TSVFileWriter from '../common/file-writer/tsv-file-writer.js';
 
 export default class GenerateCommand implements CliCommandInterface {
   public readonly name = '--generate';
@@ -19,9 +19,10 @@ export default class GenerateCommand implements CliCommandInterface {
     }
 
     const offerGeneratorString = new RentOfferGenerator(this.initialData);
+    const tsvFileWriter = new TSVFileWriter(filepath);
 
     for (let i = 0; i < offerCount; i++) {
-      await appendFile(filepath, `${offerGeneratorString.generate(i)}\n`, 'utf8');
+      await tsvFileWriter.write(offerGeneratorString.generate(i));
     }
 
     console.log(`File ${filepath} was created!`);
