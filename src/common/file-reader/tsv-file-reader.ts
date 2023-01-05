@@ -38,9 +38,7 @@ export default class TSVFileReader implements FileReaderInterface {
         photos: photos.split(';'),
         premium: JSON.parse(premium),
         favorite: JSON.parse(favorite),
-        rating: Number.parseFloat(
-          String(rating).replace(/,/g, '.')
-        ),
+        rating: Number.parseFloat(String(rating)),
         propertyType: PropertyType[propertyType as keyof typeof PropertyType],
         numRooms: Number.parseInt(numRooms, 10),
         numGuests: Number.parseInt(numGuests, 10),

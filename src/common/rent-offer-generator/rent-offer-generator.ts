@@ -53,7 +53,7 @@ export default class RentOfferGenerator implements RentOfferGeneratorInterface {
     const coordinates = CityCoordinates[city as keyof typeof CityCoordinates].join(';');
     const username = getRandomItem<string>(this.mockData.usernames);
     const email = `${username.replace(/\s/g,'').toLowerCase}${getRandomItem<string>(this.mockData.emails)}`;
-    const avatar = getRandomItem<string>(this.mockData.propertyTypes);
+    const avatar = `avatar${this.offerNumber}.jpg`;
     const password = getRandomItem<string>(this.mockData.passwords);
     const userStatus = getRandomItem<string>([UserStatus.Standart, UserStatus.Pro]);
 
