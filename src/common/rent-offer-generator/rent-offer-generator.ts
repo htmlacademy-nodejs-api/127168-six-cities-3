@@ -25,21 +25,20 @@ const NUM_PHOTOS = 6;
 export default class RentOfferGenerator implements RentOfferGeneratorInterface {
   constructor (
     private readonly mockData: MockData,
-    private readonly counter: number
   ) {}
 
-  private readonly offerNumber = convertNumWithPads(this.counter);
+  generate (counter: number): string {
+    const offerNumber = convertNumWithPads(counter);
 
-  generate(): string {
     const title = getRandomItem<string>(this.mockData.titles);
     const description = getRandomItem<string>(this.mockData.descriptions);
     const postDate = dayjs().subtract(generateRandomValue(DaysInterval.FirstDay, DaysInterval.LastDay), 'day').toISOString();
     const city = getRandomItem<string>(this.mockData.cities);
-    const preview = `preview${this.offerNumber}.jpg`;
+    const preview = `preview${offerNumber}.jpg`;
     const photos = Array.from(
       {length: NUM_PHOTOS},
       (_item, index) =>
-        `photo${this.offerNumber}-${convertNumWithPads(index)}.jpg`
+        `photo${offerNumber}-${convertNumWithPads(index)}.jpg`
     ).join(';');
     const premium = getRandomBoolean().toString();
     const favorite = getRandomBoolean().toString();
@@ -53,7 +52,7 @@ export default class RentOfferGenerator implements RentOfferGeneratorInterface {
     const coordinates = CityCoordinates[city as keyof typeof CityCoordinates].join(';');
     const username = getRandomItem<string>(this.mockData.usernames);
     const email = `${username.replace(/\s/g,'').toLowerCase}${getRandomItem<string>(this.mockData.emails)}`;
-    const avatar = `avatar${this.offerNumber}.jpg`;
+    const avatar = `avatar${offerNumber}.jpg`;
     const password = getRandomItem<string>(this.mockData.passwords);
     const userStatus = getRandomItem<string>([UserStatus.Standart, UserStatus.Pro]);
 

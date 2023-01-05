@@ -1,3 +1,3 @@
 export interface RentOfferGeneratorInterface {
-  generate(): string;
+  generate(counter: number): string;
 }
