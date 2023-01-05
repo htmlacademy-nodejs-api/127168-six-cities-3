@@ -42,7 +42,7 @@
       "Hamburg",
       "Dusseldorf"
     ],
-    "propertyType": [
+    "propertyTypes": [
       "Apartment",
       "House",
       "Room",
