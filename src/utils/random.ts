@@ -1,27 +1,16 @@
 const MIN_ELEMENTS = 1;
 
-export const generateRandomValue = (min:number, max: number, numAfterDigit = 0) =>
+export const generateRandomDecimal = (min:number, max: number, numAfterDigit = 0) =>
   +((Math.random() * (max - min)) + min).toFixed(numAfterDigit);
 
-export const getRandomBoolean = (): boolean => Boolean(Math.round(Math.random()));
+export const getRandomBoolean = (): boolean => Math.random() > 0.5;
 
 export const getRandomItem = <T>(items: T[]):T =>
-  items[generateRandomValue(0, items.length - 1)];
+  items[generateRandomDecimal(0, items.length - 1)];
 
 export const getRandomItems = <T>(elements: T[]):T[] => {
-  const numElements = generateRandomValue(MIN_ELEMENTS, elements.length);
-  const usedElements: T[] = [];
+  const numElements = generateRandomDecimal(MIN_ELEMENTS, elements.length);
+  const randomSortedElements = elements.sort(() => 0.5 - Math.random());
 
-  for (let i = 0; i < numElements; i++) {
-    const newElement = getRandomItem(elements);
-
-    if (usedElements.includes(newElement)) {
-      i--;
-      continue;
-    }
-
-    usedElements.push(newElement);
-  }
-
-  return usedElements;
+  return randomSortedElements.slice(0, numElements);
 };
