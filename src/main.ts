@@ -7,9 +7,9 @@ import { LoggerInterface } from './common/logger/logger.interface.js';
 import LoggerService from './common/logger/logger.service.js';
 
 const applicationContainer = new Container();
-applicationContainer.bind<Application>(Component.Application).to(Application);
-applicationContainer.bind<LoggerInterface>(Component.LoggerInterface).to(LoggerService);
-applicationContainer.bind<ConfigInterface>(Component.ConfigInterface).to(ConfigService);
+applicationContainer.bind<Application>(Component.Application).to(Application).inSingletonScope();
+applicationContainer.bind<LoggerInterface>(Component.LoggerInterface).to(LoggerService).inSingletonScope();
+applicationContainer.bind<ConfigInterface>(Component.ConfigInterface).to(ConfigService).inSingletonScope();
 
 const application = applicationContainer.get<Application>(Component.Application);
 await application.init();
