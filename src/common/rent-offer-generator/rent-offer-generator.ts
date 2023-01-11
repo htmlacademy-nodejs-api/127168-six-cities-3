@@ -10,7 +10,7 @@ import {
 import { convertNumWithPads } from '../../utils/converting.js';
 import dayjs from 'dayjs';
 import {
-  generateRandomValue,
+  generateRandomDecimal,
   getRandomBoolean,
   getRandomItem,
   getRandomItems
@@ -21,6 +21,7 @@ import { UserStatus } from '../../types/user-status.enum.js';
 
 const NUM_AFTER_DIGIT = 1;
 const NUM_PHOTOS = 6;
+const NUM_PADS = 3;
 
 export default class RentOfferGenerator implements RentOfferGeneratorInterface {
   constructor (
@@ -28,27 +29,27 @@ export default class RentOfferGenerator implements RentOfferGeneratorInterface {
   ) {}
 
   generate (counter: number): string {
-    const offerNumber = convertNumWithPads(counter);
+    const offerNumber = convertNumWithPads(counter, NUM_PADS);
 
     const title = getRandomItem<string>(this.mockData.titles);
     const description = getRandomItem<string>(this.mockData.descriptions);
-    const postDate = dayjs().subtract(generateRandomValue(DaysInterval.FirstDay, DaysInterval.LastDay), 'day').toISOString();
+    const postDate = dayjs().subtract(generateRandomDecimal(DaysInterval.FirstDay, DaysInterval.LastDay), 'day').toISOString();
     const city = getRandomItem<string>(this.mockData.cities);
     const preview = `preview${offerNumber}.jpg`;
     const photos = Array.from(
       {length: NUM_PHOTOS},
       (_item, index) =>
-        `photo${offerNumber}-${convertNumWithPads(index)}.jpg`
+        `photo${offerNumber}-${convertNumWithPads(index, NUM_PADS)}.jpg`
     ).join(';');
     const premium = getRandomBoolean().toString();
     const favorite = getRandomBoolean().toString();
-    const rating = generateRandomValue(RatingInterval.MinRating, RatingInterval.MaxRating, NUM_AFTER_DIGIT).toString();
+    const rating = generateRandomDecimal(RatingInterval.MinRating, RatingInterval.MaxRating, NUM_AFTER_DIGIT).toString();
     const propertyType = getRandomItem<string>(this.mockData.propertyTypes);
-    const numRooms = generateRandomValue(RoomsInterval.MinRooms, RoomsInterval.MaxRooms).toString();
-    const numGuests = generateRandomValue(GuestsInterval.MinGuests, GuestsInterval.MaxGuests).toString();
-    const price = generateRandomValue(PriceInterval.MinPrice, PriceInterval.MaxPrice).toString();
+    const numRooms = generateRandomDecimal(RoomsInterval.MinRooms, RoomsInterval.MaxRooms).toString();
+    const numGuests = generateRandomDecimal(GuestsInterval.MinGuests, GuestsInterval.MaxGuests).toString();
+    const price = generateRandomDecimal(PriceInterval.MinPrice, PriceInterval.MaxPrice).toString();
     const amenities = getRandomItems<string>(this.mockData.amenities).join(';');
-    const numComments = generateRandomValue(CommentsInterval.MinComments, CommentsInterval.MaxComments).toString();
+    const numComments = generateRandomDecimal(CommentsInterval.MinComments, CommentsInterval.MaxComments).toString();
     const coordinates = CityCoordinates[city as keyof typeof CityCoordinates].join(';');
     const username = getRandomItem<string>(this.mockData.usernames);
     const email = `${username.replace(/\s/g,'').toLowerCase()}${getRandomItem<string>(this.mockData.emails)}`;
