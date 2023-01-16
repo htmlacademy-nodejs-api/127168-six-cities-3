@@ -1,18 +1,31 @@
+import { Component } from '../../types/component.types.js';
 import CreateUserDTO from './dto/create-user.dto.js';
 import {DocumentType} from '@typegoose/typegoose/lib/types.js';
-import {UserEntity, UserModel} from './user.entity.js';
+import { inject, injectable } from 'inversify';
+import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { types } from '@typegoose/typegoose';
+import {UserEntity} from './user.entity.js';
 import {UserServiceInterface} from './user-service.interface.js';
 
+@injectable()
 export default class UserService implements UserServiceInterface {
+  constructor(
+    @inject(Component.LoggerInterface) private logger: LoggerInterface,
+    @inject(Component.UserModel) private readonly userModel: types.ModelType<UserEntity>
+  ) {}
+
   public async create(dto: CreateUserDTO, salt: string): Promise<DocumentType<UserEntity>> {
     const user = new UserEntity(dto);
     user.setPassword(dto.password, salt);
 
-    return UserModel.create(user);
+    const result = await this.userModel.create(user);
+    this.logger.info(`New user created: ${user.email}`);
+
+    return result;
   }
 
   public async findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
-    return UserModel.findOne({email});
+    return this.userModel.findOne({email});
   }
 
   public async findOrCreate(dto: CreateUserDTO, salt: string): Promise<DocumentType<UserEntity>> {
