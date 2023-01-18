@@ -6,7 +6,7 @@ import { userContainer } from './modules/user/user.container.js';
 
 const mainContainer = Container.merge(
   applicationContainer,
-  userContainer
+  userContainer,
 );
 
 async function bootstrap() {
