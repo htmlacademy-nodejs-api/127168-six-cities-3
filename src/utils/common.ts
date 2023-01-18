@@ -3,8 +3,9 @@ import { City } from '../types/city.enum.js';
 import crypto from 'crypto';
 import { PropertyType } from '../types/property-type.enum.js';
 import { UserStatus } from '../types/user-status.enum.js';
+import { RentOffer } from '../types/rent-offer.type.js';
 
-export const createRentOffer = (row: string) => {
+export const createRentOffer = (row: string): RentOffer => {
   const tokens = row.replace('\n', '').split('\t');
   const [
     title, description, postDate, city, preview,
