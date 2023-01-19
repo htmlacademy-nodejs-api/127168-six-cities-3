@@ -103,7 +103,7 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
     required: true,
     ref: UserEntity
   })
-  public user!: Ref<UserEntity>;
+  public userId!: Ref<UserEntity>;
 }
 
 export const RentOfferModel = getModelForClass(RentOfferEntity);

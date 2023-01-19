@@ -1,10 +1,10 @@
+import 'reflect-metadata';
 import { Component } from '../types/component.types.js';
 import { ConfigInterface } from '../common/config/config.interface.js';
 import { DatabaseInterface } from '../common/database-client/database.interface.js';
 import { getURI } from '../utils/db.js';
 import { inject, injectable } from 'inversify';
 import {LoggerInterface} from '../common/logger/logger.interface.js';
-import 'reflect-metadata';
 
 @injectable()
 export default class Application {
