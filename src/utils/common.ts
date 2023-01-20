@@ -1,9 +1,11 @@
 import { Amenities } from '../types/amenities.enum.js';
 import { City } from '../types/city.enum.js';
+import crypto from 'crypto';
 import { PropertyType } from '../types/property-type.enum.js';
 import { UserStatus } from '../types/user-status.enum.js';
+import { RentOffer } from '../types/rent-offer.type.js';
 
-export const createRentOffer = (row: string) => {
+export const createRentOffer = (row: string): RentOffer => {
   const tokens = row.replace('\n', '').split('\t');
   const [
     title, description, postDate, city, preview,
@@ -44,3 +46,8 @@ export const createRentOffer = (row: string) => {
 
 export const getErrorMessage = (error: unknown): string =>
   error instanceof Error ? error.message : '';
+
+export const createSHA256 = (line: string, salt: string): string => {
+  const shaHasher = crypto.createHmac('sha256', salt);
+  return shaHasher.update(line).digest('hex');
+};
