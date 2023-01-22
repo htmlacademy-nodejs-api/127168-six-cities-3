@@ -18,6 +18,45 @@ tags:
     description: Действия с избранными объявлениями.
 
 paths:
+  /rent-offers:
+    get:
+      tags:
+        - rent-offers
+      summary: Получение списка предложений по аренде
+      description: Возвращает список преложений по аренде в виде массива объектов.
+
+  /rent-offers/premium:
+    get:
+      tags:
+        - rent-offers
+      summary: Получение премиальных предложений по аренде
+      description: Возвращает список премиальных преложений по аренде в виде массива объектов.
+
+  /rent-offers/{rentId}:
+    get:
+      tags:
+        - rent-offers
+      summary: Получение детальной информации по предложению
+      description: Возвращает предложение по аренде с идентификатором rentId.
+
+    post:
+      tags:
+        - rent-offers
+      summary: Создание нового предложения по аренде
+      description: Возвращает новое предложение по аренде с идентификатором rentId.
+
+    put:
+      tags:
+        - rent-offers
+      summary: Редактирование информации по аренде
+      description: Возвращает отредактированное предложение по аренде с идентификатором rentId.
+
+    delete:
+      tags:
+        - rent-offers
+      summary: Удаление предложения по аренде
+      description: Удаляет предложение по аренде, созданное конкретным пользователем.
+
   /comments/{rentId}:
     get:
       tags:
