@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.1
 info:
   title: API сервер для проекта «Шесть городов».
   description: |-
@@ -16,3 +16,32 @@ tags:
     description: Действия с пользователем.
   - name: favorites
     description: Действия с избранными объявлениями.
+
+paths:
+  /users/register:
+    post:
+      tags:
+        - users
+      summary: Регистрация пользователя
+      description: Регистрирует нового пользователя.
+
+  /users/login:
+    post:
+      tags:
+        - users
+      summary: Авторизация пользователя
+      description: Авторизует пользователя на основе логина и пароля
+
+    get:
+      tags:
+        - users
+      summary: Проверка состояния пользователя
+      description: Возвращает информацию по авторизованному пользователю
+
+  /users/logout:
+    delete:
+      tags:
+        - users
+      summary: Завершение работы пользователя
+      description: Завершает сеанс работы — выход из авторизации.
+
