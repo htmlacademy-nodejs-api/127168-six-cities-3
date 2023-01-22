@@ -77,6 +77,33 @@ paths:
       summary: Регистрация пользователя
       description: Регистрирует нового пользователя.
 
+      requestBody:
+        description: Информация для создания нового пользователя.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/createUser'
+        required: true
+
+      responses:
+        "201":
+          description: Пользователь зарегистрирован. Объект пользователя.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        "400":
+          description: Невалидные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidData'
+
+        "409":
+          description: Пользователь с таким email уже существует.
+
+
   /users/login:
     post:
       tags:
@@ -110,3 +137,62 @@ paths:
         - favorites
       summary: Изменение статуса избранного объявления
       description: Добавление или удаление предложения в/из избранного. Возвращает предложение с идентификатором rentId с актуальным состоянием поля isFavorite
+
+
+components:
+  schemas:
+    createUser:
+      type: object
+
+      properties:
+        username:
+          type: string
+          example: Caroline McCormick
+
+        email:
+          type: string
+          example: caroline_mccormick@gmail.com
+
+        avatar:
+          type: string
+          example: avatar-image.jpg
+
+        password:
+          type: string
+          example: qwerty12345
+
+        userStatus:
+          type: string
+          example: Standart
+
+    user:
+      type: object
+
+      properties:
+        userId:
+          type: string
+          example: 5c3zjtpxeclquo2p2zlu91ic
+
+        username:
+          type: string
+          example: Caroline McCormick
+
+        email:
+          type: string
+          example: caroline_mccormick@gmail.com
+
+        avatar:
+          type: string
+          example: avatar-image.jpg
+
+        userStatus:
+          type: string
+          example: Standart
+
+    invalidData:
+      type: object
+
+      properties:
+        error:
+          type: string
+          example: Невалидные данные. Проверьте заполненные поля
