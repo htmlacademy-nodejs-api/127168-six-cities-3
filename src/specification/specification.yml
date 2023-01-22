@@ -1,0 +1,18 @@
+openapi: 3.1.0
+info:
+  title: API сервер для проекта «Шесть городов».
+  description: |-
+    * Список ресурсов и маршрутов сервера «Шесть городов».
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 3.0.0
+tags:
+  - name: rent-offers
+    description: Действия с объявлениями.
+  - name: comments
+    description: Действия с комментариями.
+  - name: users
+    description: Действия с пользователем.
+  - name: favorites
+    description: Действия с избранными объявлениями.
