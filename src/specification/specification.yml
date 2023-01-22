@@ -18,6 +18,19 @@ tags:
     description: Действия с избранными объявлениями.
 
 paths:
+  /comments/{rentId}:
+    get:
+      tags:
+        - comments
+      summary: Получение списка комментариев к предложению
+      description: Возвращает список комментариев для предложения с идентификатором rentId.
+
+    post:
+      tags:
+        - comments
+      summary: Добавление нового комментария
+      description: Добавляет новый комментарий для предложения с идентификатором rentId.
+
   /users/register:
     post:
       tags:
