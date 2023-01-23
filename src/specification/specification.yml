@@ -109,7 +109,39 @@ paths:
       tags:
         - users
       summary: Авторизация пользователя
-      description: Авторизует пользователя на основе логина и пароля
+      description: Авторизует пользователя на основе логина и пароля. В случае успешного запроса сервер вернёт токен, по которому в дальнейшем происходит авторизация. Этот токен необходимо передавать через заголовок X-Token.
+
+      requestBody:
+        description: Аторизационные данные&#58; логин и пароль
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/loginUser'
+        required: true
+
+      responses:
+        "200":
+          description: Авторизация пройдена успешно. Возвращается объект пользователя и X-Token.
+          headers:
+            X-Token:
+              schema:
+                type: string
+              description:
+                Токен авторизации. Передавать в закрытые части приложения.
+              example:
+                T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        "400":
+          description: Невалидные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidData'
+
 
     get:
       tags:
@@ -141,6 +173,18 @@ paths:
 
 components:
   schemas:
+    loginUser:
+      type: object
+
+      properties:
+        email:
+          type: string
+          example: caroline_mccormick@gmail.com
+
+        password:
+          type: string
+          example: qwerty12345
+
     createUser:
       type: object
 
