@@ -148,6 +148,39 @@ paths:
         - users
       summary: Проверка состояния пользователя
       description: Возвращает информацию по авторизованному пользователю
+      parameters:
+        - in: header
+          name: X-Token
+          schema:
+            type:
+              string
+            example:
+              T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          required:
+            true
+
+      responses:
+        "200":
+          description: Проверка авторизации пройдена успешно.
+          headers:
+            X-Token:
+              schema:
+                type: string
+              description:
+                Токен авторизации. Передавать в закрытые части приложения.
+              example:
+                T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/user'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
 
   /users/logout:
     delete:
@@ -240,3 +273,11 @@ components:
         error:
           type: string
           example: Невалидные данные. Проверьте заполненные поля
+
+    unauthorizedUser:
+      type: object
+
+      properties:
+        error:
+          type: string
+          example: Пользователь не авторизован.
