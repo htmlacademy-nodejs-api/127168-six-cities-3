@@ -103,7 +103,6 @@ paths:
         "409":
           description: Пользователь с таким email уже существует.
 
-
   /users/login:
     post:
       tags:
@@ -126,10 +125,8 @@ paths:
             X-Token:
               schema:
                 type: string
-              description:
-                Токен авторизации. Передавать в закрытые части приложения.
-              example:
-                T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+              description: Токен авторизации. Передавать в закрытые части приложения.
+              example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
           content:
             application/json:
               schema:
@@ -152,10 +149,9 @@ paths:
         - in: header
           name: X-Token
           schema:
-            type:
-              string
-            example:
-              T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          description: Токен авторизации
           required:
             true
 
@@ -166,10 +162,8 @@ paths:
             X-Token:
               schema:
                 type: string
-              description:
-                Токен авторизации. Передавать в закрытые части приложения.
-              example:
-                T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+              description: Токен авторизации. Передавать в закрытые части приложения.
+              example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
           content:
             application/json:
               schema:
