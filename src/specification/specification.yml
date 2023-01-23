@@ -29,6 +29,7 @@ paths:
           name: count
           schema:
             type: integer
+            minimum: 60
             example: 100
           description: Требуемое количество предложений
           required: false
@@ -98,12 +99,89 @@ paths:
         - comments
       summary: Получение списка комментариев к предложению
       description: Возвращает список комментариев для предложения с идентификатором rentId.
+      parameters:
+        - in: path
+          name: rentId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор объявления
+
+      responses:
+        "200":
+          description: Массив комментариев по предложению rentId
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  allOf:
+                    - $ref: '#/components/schemas/commentData'
+                    - type: object
+
+        "404":
+          description: Предложение rentId не обнаружено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundData'
+
 
     post:
       tags:
         - comments
       summary: Добавление нового комментария
       description: Добавляет новый комментарий для предложения с идентификатором rentId.
+      parameters:
+        - in: header
+          name: X-Token
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          description: Токен авторизации
+          required:
+            true
+        - in: path
+          name: rentId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор объявления
+
+
+      requestBody:
+        description: Данные по новому комментарию.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newComment'
+        required: true
+
+      responses:
+        "201":
+          description: Комментарий создан. Объект комментария
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/commentData'
+
+        "400":
+          description: Невалидные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidData'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
+
 
   /users/register:
     post:
@@ -280,6 +358,10 @@ components:
       type: object
 
       properties:
+        rentId:
+          type: string
+          example: 63c95f619aec98932211d596
+
         title:
           type: string
           example: The WonderINN Mirrored Glass Cabin
@@ -319,6 +401,38 @@ components:
         numComments:
           type: number
           example: 39
+
+    newComment:
+      type: object
+
+      properties:
+        comment:
+          type: string
+          example: My new comment!
+
+        rating:
+          type: number
+          example: 3.5
+
+    commentData:
+      type: object
+
+      properties:
+        comment:
+          type: string
+          example: My new comment!
+
+        rating:
+          type: number
+          example: 3.5
+
+        postDate:
+          type: string
+          example: 2023-01-16T15:13:04.633Z
+
+        user:
+          type: object
+          $ref: '#/components/schemas/user'
 
     loginUser:
       type: object
@@ -396,10 +510,10 @@ components:
           type: string
           example: Пользователь не авторизован.
 
-    noData:
+    notFoundData:
       type: object
 
       properties:
         error:
           type: string
-          example: Данные по запросу отсутствуют.
+          example: Ресурс не обнаружен. Проверьте введённые данные
