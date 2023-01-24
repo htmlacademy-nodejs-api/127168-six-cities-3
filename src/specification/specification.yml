@@ -45,7 +45,7 @@ paths:
                 items:
                   type: object
                   allOf:
-                    - $ref: '#/components/schemas/rent-offer-min'
+                    - $ref: '#/components/schemas/rentOfferMin'
                     - type: object
 
   /rent-offers/premium:
@@ -65,7 +65,7 @@ paths:
                 items:
                   type: object
                   allOf:
-                    - $ref: '#/components/schemas/rent-offer-min'
+                    - $ref: '#/components/schemas/rentOfferMin'
                     - type: object
 
   /rent-offers/{rentId}:
@@ -74,24 +74,188 @@ paths:
         - rent-offers
       summary: Получение детальной информации по предложению
       description: Возвращает предложение по аренде с идентификатором rentId.
+      parameters:
+        - in: path
+          name: rentId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор предложения по аренде
+
+      responses:
+        "200":
+          description: Объект с детальной информацией о предложении.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rentOfferFull'
+
+        "404":
+          description: Предложение rentId не обнаружено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundData'
+
 
     post:
       tags:
         - rent-offers
       summary: Создание нового предложения по аренде
       description: Возвращает новое предложение по аренде с идентификатором rentId.
+      parameters:
+        - in: header
+          name: X-Token
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          description: Токен авторизации
+          required:
+            true
+        - in: path
+          name: rentId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор предложения по аренде
+
+      requestBody:
+        description: Данные по новому предложению.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newRentOffer'
+        required: true
+
+      responses:
+        "201":
+          description: Предложение по аренде создано. Объект предложения
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rentOfferFull'
+
+        "400":
+          description: Невалидные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidData'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
+
+        "404":
+          description: Предложение rentId не обнаружено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundData'
 
     put:
       tags:
         - rent-offers
       summary: Редактирование информации по аренде
       description: Возвращает отредактированное предложение по аренде с идентификатором rentId.
+      parameters:
+        - in: header
+          name: X-Token
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          description: Токен авторизации
+          required:
+            true
+        - in: path
+          name: rentId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор предложения по аренде
+
+      requestBody:
+        description: Данные по редактируемому предложению.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/modifiedRentOffer'
+        required: true
+
+      responses:
+        "200":
+          description: Предложение по аренде отредактированно. Объект предложения
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rentOfferFull'
+
+        "400":
+          description: Невалидные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidData'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
+
+        "403":
+          description: Редактирование запрещено.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/forbiddenResponse'
+
+        "404":
+          description: Предложение rentId не обнаружено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundData'
 
     delete:
       tags:
         - rent-offers
       summary: Удаление предложения по аренде
       description: Удаляет предложение по аренде, созданное конкретным пользователем.
+      parameters:
+        - in: header
+          name: X-Token
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          description: Токен авторизации
+          required:
+            true
+        - in: path
+          name: rentId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор предложения по аренде
+
+      responses:
+        "204":
+          description: Предложение по аренде удалено
+
+        "404":
+          description: Предложение rentId не обнаружено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundData'
 
   /comments/{rentId}:
     get:
@@ -150,7 +314,6 @@ paths:
             type: string
             example: 63c95f619aec98932211d596
           description: Идентификатор объявления
-
 
       requestBody:
         description: Данные по новому комментарию.
@@ -334,7 +497,7 @@ paths:
                 items:
                   type: object
                   allOf:
-                    - $ref: '#/components/schemas/rent-offer-min'
+                    - $ref: '#/components/schemas/rentOfferMin'
                     - type: object
 
         "401":
@@ -350,11 +513,62 @@ paths:
         - favorites
       summary: Изменение статуса избранного объявления
       description: Добавление или удаление предложения в/из избранного. Возвращает предложение с идентификатором rentId с актуальным состоянием поля isFavorite
+      parameters:
+        - in: header
+          name: X-Token
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          description: Токен авторизации
+          required:
+            true
+        - in: path
+          name: rentId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор предложения по аренде
+        - in: path
+          name: status
+          required: true
+          schema:
+            type: number
+            example: 1
+          description: Статус избранного предложения по аренде. 1 - добавить в избранное, 0 - удалить из избранного
 
+      responses:
+        "200":
+          description: Предложение по аренде отредактированно. Объект предложения
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rentOfferFull'
+
+        "400":
+          description: Невалидные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidData'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
+
+        "404":
+          description: Предложение rentId не обнаружено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundData'
 
 components:
   schemas:
-    rent-offer-min:
+    rentOfferMin:
       type: object
 
       properties:
@@ -392,6 +606,91 @@ components:
 
         premium:
           type: boolean
+          example: true
+
+        favorite:
+          type: boolean
+          example: false
+
+        numComments:
+          type: number
+          example: 39
+
+    rentOfferFull:
+      type: object
+
+      properties:
+        rentId:
+          type: string
+          example: 63c95f619aec98932211d596
+
+        title:
+          type: string
+          example: The WonderINN Mirrored Glass Cabin
+
+        description:
+          type: string
+          example: Immerse yourself in the wilderness, still within reach of civilization! WonderINN is literally a hidden gem; the unique design of the mirrored glass blends into the landscape so you can retreat to comfort and luxury as you watch the world pass by.
+
+        city:
+          type: string
+          example: Cologne
+
+        coordinates:
+          type: array
+          items:
+            type: number
+          example: [50.938361, 6.959974]
+
+        propertyType:
+          type: string
+          example: Room
+
+        price:
+          type: number
+          example: 2026
+
+        rating:
+          type: number
+          example: 1.6
+
+        preview:
+          type: string
+          example: preview002.jpg
+
+        photos:
+          type: array
+          items:
+            type: string
+          example: [
+            photo002-000.jpg,
+            photo002-001.jpg,
+            photo002-002.jpg,
+            photo002-003.jpg,
+            photo002-004.jpg,
+            photo002-005.jpg
+          ]
+
+        numRooms:
+          type: number
+          example: 4
+
+        numGuests:
+          type: number
+          example: 5
+
+        amenities:
+          type: array
+          items:
+            type: string
+          example: [Baby seat, Towels, Washer]
+
+        postDate:
+          type: string
+          example: 2023-01-16T15:13:04.633Z
+
+        premium:
+          type: boolean
           example: false
 
         favorite:
@@ -401,6 +700,140 @@ components:
         numComments:
           type: number
           example: 39
+
+        user:
+          type: object
+          $ref: '#/components/schemas/user'
+
+    newRentOffer:
+      type: object
+
+      properties:
+        title:
+          type: string
+          example: The WonderINN Mirrored Glass Cabin
+
+        description:
+          type: string
+          example: Immerse yourself in the wilderness, still within reach of civilization! WonderINN is literally a hidden gem; the unique design of the mirrored glass blends into the landscape so you can retreat to comfort and luxury as you watch the world pass by.
+
+        city:
+          type: string
+          example: Cologne
+
+        propertyType:
+          type: string
+          example: Room
+
+        price:
+          type: number
+          example: 2026
+
+        preview:
+          type: string
+          example: preview002.jpg
+
+        photos:
+          type: array
+          items:
+            type: string
+          example: [
+            photo002-000.jpg,
+            photo002-001.jpg,
+            photo002-002.jpg,
+            photo002-003.jpg,
+            photo002-004.jpg,
+            photo002-005.jpg
+          ]
+
+        numRooms:
+          type: number
+          example: 4
+
+        numGuests:
+          type: number
+          example: 5
+
+        amenities:
+          type: array
+          items:
+            type: string
+          example: [Baby seat, Towels, Washer]
+
+        premium:
+          type: boolean
+          example: false
+
+        favorite:
+          type: boolean
+          example: true
+
+    modifiedRentOffer:
+      type: object
+
+      properties:
+        rentId:
+          type: string
+          example: 63c95f619aec98932211d596
+
+        title:
+          type: string
+          example: The WonderINN Mirrored Glass Cabin
+
+        description:
+          type: string
+          example: Immerse yourself in the wilderness, still within reach of civilization! WonderINN is literally a hidden gem; the unique design of the mirrored glass blends into the landscape so you can retreat to comfort and luxury as you watch the world pass by.
+
+        city:
+          type: string
+          example: Cologne
+
+        propertyType:
+          type: string
+          example: Room
+
+        price:
+          type: number
+          example: 2026
+
+        preview:
+          type: string
+          example: preview002.jpg
+
+        photos:
+          type: array
+          items:
+            type: string
+          example: [
+            photo002-000.jpg,
+            photo002-001.jpg,
+            photo002-002.jpg,
+            photo002-003.jpg,
+            photo002-004.jpg,
+            photo002-005.jpg
+          ]
+
+        numRooms:
+          type: number
+          example: 4
+
+        numGuests:
+          type: number
+          example: 5
+
+        amenities:
+          type: array
+          items:
+            type: string
+          example: [Baby seat, Towels, Washer]
+
+        premium:
+          type: boolean
+          example: false
+
+        favorite:
+          type: boolean
+          example: true
 
     newComment:
       type: object
@@ -509,6 +942,14 @@ components:
         error:
           type: string
           example: Пользователь не авторизован.
+
+    forbiddenResponse:
+      type: object
+
+      properties:
+        error:
+          type: string
+          example: Доступ запрещён.
 
     notFoundData:
       type: object
