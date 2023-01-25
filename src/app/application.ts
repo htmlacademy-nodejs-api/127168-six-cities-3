@@ -5,6 +5,8 @@ import { DatabaseInterface } from '../common/database-client/database.interface.
 import { getURI } from '../utils/db.js';
 import { inject, injectable } from 'inversify';
 import {LoggerInterface} from '../common/logger/logger.interface.js';
+import { RentOfferServiceInterface } from '../modules/rent-offer/rent-offer-service.interface.js';
+import { UserServiceInterface } from '../modules/user/user-service.interface.js';
 
 @injectable()
 export default class Application {
@@ -12,6 +14,8 @@ export default class Application {
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
     @inject(Component.ConfigInterface) private config: ConfigInterface,
     @inject(Component.DatabaseInterface) private databaseClient: DatabaseInterface,
+    @inject(Component.RentOfferServiceInterface) private rentOfferService: RentOfferServiceInterface, // TODO - убрать перед отправкой
+    @inject(Component.UserServiceInterface) private userService: UserServiceInterface, // TODO - убрать перед отправкой
   ) {}
 
   public async init() {
@@ -28,5 +32,8 @@ export default class Application {
     );
 
     await this.databaseClient.connect(uri);
+
+    console.log(await this.rentOfferService.findById('63d13d2001623a259f1c879b'));// TODO - убрать перед отправкой
+    console.log(await this.userService.findByEmail('vernagraham@mailfence.com'));// TODO - убрать перед отправкой
   }
 }

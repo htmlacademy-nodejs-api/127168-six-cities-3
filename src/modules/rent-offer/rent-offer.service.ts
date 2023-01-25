@@ -21,6 +21,9 @@ export default class RentOfferService implements RentOfferServiceInterface {
   }
 
   public async findById(offerId: string): Promise<DocumentType<RentOfferEntity> | null> {
-    return this.rentOfferModel.findById(offerId).exec();
+    return this.rentOfferModel
+      .findById(offerId)
+      .populate(['userId'])
+      .exec();
   }
 }
