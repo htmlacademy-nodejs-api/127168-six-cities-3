@@ -26,4 +26,36 @@ export default class RentOfferService implements RentOfferServiceInterface {
       .populate(['userId'])
       .exec();
   }
+
+  public async find(): Promise<DocumentType<RentOfferEntity>[]> {
+    return this.rentOfferModel
+      .find()
+      .populate(['userId'])
+      .exec();
+  }
+
+  public async deleteById(offerId: string): Promise<DocumentType<RentOfferEntity> | null> {
+    return this.rentOfferModel
+      .findByIdAndDelete(offerId)
+      .exec();
+  }
+
+  public async updateById(offerId: string, dto: CreateRentOfferDTO): Promise<DocumentType<RentOfferEntity> | null> {
+    return this.rentOfferModel
+      .findByIdAndUpdate(offerId, dto, {new: true})
+      .populate(['userId'])
+      .exec();
+  }
+
+  public async incCommentCount(offerId: string): Promise<DocumentType<RentOfferEntity> | null> {
+    return this.rentOfferModel
+      .findByIdAndUpdate(offerId, {'$inc': {
+        numComments: 1,
+      }}).exec();
+  }
+
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.rentOfferModel
+      .exists({_id: documentId})) !== null;
+  }
 }
