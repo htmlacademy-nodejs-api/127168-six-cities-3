@@ -1,0 +1,1 @@
+export const DEFAULT_RENT_OFFER_COUNT = 60;

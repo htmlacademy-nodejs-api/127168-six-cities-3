@@ -6,7 +6,7 @@ import { RentOfferEntity } from './rent-offer.entity.js';
 export interface RentOfferServiceInterface {
   create(dto: CreateRentOfferDTO): Promise<DocumentType<RentOfferEntity>>;
   findById(offerId: string): Promise<DocumentType<RentOfferEntity> | null>;
-  find(): Promise<DocumentType<RentOfferEntity>[]>;
+  find(count?: number): Promise<DocumentType<RentOfferEntity>[]>;
   deleteById(offerId: string): Promise<DocumentType<RentOfferEntity> | null>;
   updateById(offerId: string, dto: CreateRentOfferDTO): Promise<DocumentType<RentOfferEntity> | null>;
   incCommentCount(offerId: string): Promise<DocumentType<RentOfferEntity> | null>;

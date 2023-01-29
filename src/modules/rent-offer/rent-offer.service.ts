@@ -2,9 +2,11 @@ import { DocumentType, types } from '@typegoose/typegoose';
 import { inject, injectable } from 'inversify';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { Component } from '../../types/component.types.js';
+import { SortType } from '../../types/sort-type.enum.js';
 import { CommentServiceInterface } from '../comment/comment-service.interface.js';
 import CreateRentOfferDTO from './dto/create-rent-offer.dto.js';
 import { RentOfferServiceInterface } from './rent-offer-service.interface.js';
+import { DEFAULT_RENT_OFFER_COUNT } from './rent-offer.constant.js';
 import { RentOfferEntity } from './rent-offer.entity.js';
 
 @injectable()
@@ -29,9 +31,11 @@ export default class RentOfferService implements RentOfferServiceInterface {
       .exec();
   }
 
-  public async find(): Promise<DocumentType<RentOfferEntity>[]> {
+  public async find(count?: number): Promise<DocumentType<RentOfferEntity>[]> {
     return this.rentOfferModel
       .find()
+      .sort({postDate: SortType.Down}) // TODO - временно для тестов. Позже заменить на createdAt
+      .limit(count || DEFAULT_RENT_OFFER_COUNT)
       .populate(['userId'])
       .exec();
   }
