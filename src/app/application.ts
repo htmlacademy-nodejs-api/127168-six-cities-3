@@ -36,11 +36,12 @@ export default class Application {
     await this.databaseClient.connect(uri);
 
     // console.log(await this.commentService.create({
-    //   text: 'Новый коммент',
-    //   rating: 4,
-    //   offerId: '63d289f81b1caa245e7f0e29',
+    //   text: 'Новый коммент 3',
+    //   rating: 2,
+    //   offerId: '63d6cfe9344cbe4504b5125d',
     //   userId: '63d289f81b1caa245e7f0e22'
     // }));// TODO - убрать перед отправкой
+    // console.log(await this.commentService.findByOfferId('63d6cfe9344cbe4504b5125d', 1));
     // console.log(await this.rentOfferService.updateCommentCountAndRating('63d6cfe9344cbe4504b5125d', 2));// TODO - убрать перед отправкой
     // console.log(await this.userService.findByEmail('vernagraham@mailfence.com'));// TODO - убрать перед отправкой
   }
