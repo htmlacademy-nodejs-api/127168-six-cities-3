@@ -1,1 +1,4 @@
-export const DEFAULT_RENT_OFFER_COUNT = 60;
+export enum OfferCounts {
+  DefaultRentOfferCount = 60,
+  PremiumCount = 3
+}

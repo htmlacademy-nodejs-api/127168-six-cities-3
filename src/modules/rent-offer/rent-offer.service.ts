@@ -5,7 +5,7 @@ import { Component } from '../../types/component.types.js';
 import { SortType } from '../../types/sort-type.enum.js';
 import CreateRentOfferDTO from './dto/create-rent-offer.dto.js';
 import { RentOfferServiceInterface } from './rent-offer-service.interface.js';
-import { DEFAULT_RENT_OFFER_COUNT } from './rent-offer.constant.js';
+import { OfferCounts } from './rent-offer.constant.js';
 import { RentOfferEntity } from './rent-offer.entity.js';
 
 @injectable()
@@ -33,7 +33,23 @@ export default class RentOfferService implements RentOfferServiceInterface {
     return this.rentOfferModel
       .find()
       .sort({postDate: SortType.Down}) // TODO - временно для тестов. Позже заменить на createdAt
-      .limit(count || DEFAULT_RENT_OFFER_COUNT)
+      .limit(count || OfferCounts.DefaultRentOfferCount)
+      .populate(['userId'])
+      .exec();
+  }
+
+  public async findPremium(): Promise<DocumentType<RentOfferEntity>[]> {
+    return this.rentOfferModel
+      .find({premium: true})
+      .sort({postDate: SortType.Down}) // TODO - временно для тестов. Позже заменить на createdAt
+      .limit(OfferCounts.PremiumCount)
+      .populate(['userId'])
+      .exec();
+  }
+
+  public async findFavorite(): Promise<DocumentType<RentOfferEntity>[]> {
+    return this.rentOfferModel
+      .find({favorite: true})
       .populate(['userId'])
       .exec();
   }

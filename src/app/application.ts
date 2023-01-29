@@ -5,9 +5,6 @@ import { DatabaseInterface } from '../common/database-client/database.interface.
 import { getURI } from '../utils/db.js';
 import { inject, injectable } from 'inversify';
 import {LoggerInterface} from '../common/logger/logger.interface.js';
-// import { RentOfferServiceInterface } from '../modules/rent-offer/rent-offer-service.interface.js';
-// import { CommentServiceInterface } from '../modules/comment/comment-service.interface.js';
-// import { UserServiceInterface } from '../modules/user/user-service.interface.js';
 
 @injectable()
 export default class Application {
@@ -15,9 +12,6 @@ export default class Application {
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
     @inject(Component.ConfigInterface) private config: ConfigInterface,
     @inject(Component.DatabaseInterface) private databaseClient: DatabaseInterface,
-    // @inject(Component.RentOfferServiceInterface) private rentOfferService: RentOfferServiceInterface, // TODO - убрать перед отправкой
-    // @inject(Component.UserServiceInterface) private userService: UserServiceInterface, // TODO - убрать перед отправкой
-    // @inject(Component.CommentServiceInterface) private commentService: CommentServiceInterface // TODO - убрать перед отправкой
   ) {}
 
   public async init() {
@@ -34,15 +28,5 @@ export default class Application {
     );
 
     await this.databaseClient.connect(uri);
-
-    // console.log(await this.commentService.create({
-    //   text: 'Новый коммент 3',
-    //   rating: 2,
-    //   offerId: '63d6cfe9344cbe4504b5125d',
-    //   userId: '63d289f81b1caa245e7f0e22'
-    // }));// TODO - убрать перед отправкой
-    // console.log(await this.commentService.findByOfferId('63d6cfe9344cbe4504b5125d', 1));
-    // console.log(await this.rentOfferService.updateCommentCountAndRating('63d6cfe9344cbe4504b5125d', 2));// TODO - убрать перед отправкой
-    // console.log(await this.userService.findByEmail('vernagraham@mailfence.com'));// TODO - убрать перед отправкой
   }
 }
