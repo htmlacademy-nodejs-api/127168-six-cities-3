@@ -51,11 +51,16 @@ export default class RentOfferService implements RentOfferServiceInterface {
       .exec();
   }
 
-  public async incCommentCount(offerId: string): Promise<DocumentType<RentOfferEntity> | null> {
+  public async updateCommentCountAndRating(offerId: string, newRate: number): Promise<DocumentType<RentOfferEntity> | null> {
     return this.rentOfferModel
-      .findByIdAndUpdate(offerId, {'$inc': {
-        numComments: 1,
-      }}).exec();
+      .findByIdAndUpdate(offerId,
+        {$inc: {
+          numComments: 1,
+          rating: newRate
+        }, // TODO - поправить этот момент
+        },
+        {new: true}
+      ).exec();
   }
 
   public async exists(documentId: string): Promise<boolean> {

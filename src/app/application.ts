@@ -41,7 +41,7 @@ export default class Application {
     //   offerId: '63d289f81b1caa245e7f0e29',
     //   userId: '63d289f81b1caa245e7f0e22'
     // }));// TODO - убрать перед отправкой
-    // console.log(await this.rentOfferService.find());// TODO - убрать перед отправкой
+    // console.log(await this.rentOfferService.updateCommentCountAndRating('63d6cfe9344cbe4504b5125d', 2));// TODO - убрать перед отправкой
     // console.log(await this.userService.findByEmail('vernagraham@mailfence.com'));// TODO - убрать перед отправкой
   }
 }

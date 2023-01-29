@@ -9,6 +9,6 @@ export interface RentOfferServiceInterface {
   find(count?: number): Promise<DocumentType<RentOfferEntity>[]>;
   deleteById(offerId: string): Promise<DocumentType<RentOfferEntity> | null>;
   updateById(offerId: string, dto: CreateRentOfferDTO): Promise<DocumentType<RentOfferEntity> | null>;
-  incCommentCount(offerId: string): Promise<DocumentType<RentOfferEntity> | null>;
+  updateCommentCountAndRating(offerId: string, newRate: number): Promise<DocumentType<RentOfferEntity> | null>;
   exists(documentId: string): Promise<boolean>;
 }

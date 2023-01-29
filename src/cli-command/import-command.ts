@@ -42,6 +42,7 @@ export default class ImportCommand implements CliCommandInterface {
       ...rentOffer,
       userId: user.id,
       numComments: 0,
+      rating: 0
     });
   }
 
