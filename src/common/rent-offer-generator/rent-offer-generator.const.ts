@@ -4,7 +4,7 @@ export enum DaysInterval {
 }
 
 export enum RatingInterval {
-  MinRating = 1,
+  MinRating = 0,
   MaxRating = 5,
 }
 

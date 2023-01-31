@@ -41,6 +41,8 @@ export default class ImportCommand implements CliCommandInterface {
     await this.rentOfferService.create({
       ...rentOffer,
       userId: user.id,
+      numComments: 0,
+      rating: 0
     });
   }
 

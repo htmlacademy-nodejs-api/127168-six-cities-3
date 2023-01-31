@@ -35,9 +35,6 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
   })
   public description!: string;
 
-  @prop({required: true})
-  public postDate!: Date;
-
   @prop({
     required: true,
     enum: City
@@ -45,16 +42,20 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
   public city!: City;
 
   @prop({required: true})
-  public preview!: string;
+  public coordinates!: [number, number];
 
-  @prop({required: true})
-  public photos!: string[];
+  @prop({
+    required: true,
+    enum: PropertyType
+  })
+  public propertyType!: PropertyType;
 
-  @prop({required: true})
-  public premium!: boolean;
-
-  @prop({required: true})
-  public favorite!: boolean;
+  @prop({
+    required: true,
+    min: PriceInterval.MinPrice,
+    max: PriceInterval.MaxPrice,
+  })
+  public price!: number;
 
   @prop({
     required: true,
@@ -63,11 +64,11 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
   })
   public rating!: number;
 
-  @prop({
-    required: true,
-    enum: PropertyType
-  })
-  public propertyType!: PropertyType;
+  @prop({required: true})
+  public preview!: string;
+
+  @prop({required: true})
+  public photos!: string[];
 
   @prop({
     required: true,
@@ -83,21 +84,20 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
   })
   public numGuests!: number;
 
-  @prop({
-    required: true,
-    min: PriceInterval.MinPrice,
-    max: PriceInterval.MaxPrice,
-  })
-  public price!: number;
-
   @prop({required: true})
   public amenities!: string[];
 
-  @prop({default: 0})
-  public numComments!: number;
+  @prop({required: true})
+  public postDate!: Date;
 
   @prop({required: true})
-  public coordinates!: [number, number];
+  public premium!: boolean;
+
+  @prop({required: true})
+  public favorite!: boolean;
+
+  @prop({default: 0})
+  public numComments!: number;
 
   @prop({
     required: true,

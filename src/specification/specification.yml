@@ -68,15 +68,15 @@ paths:
                     - $ref: '#/components/schemas/rentOfferMin'
                     - type: object
 
-  /rent-offers/{rentId}:
+  /rent-offers/{offerId}:
     get:
       tags:
         - rent-offers
       summary: Получение детальной информации по предложению
-      description: Возвращает предложение по аренде с идентификатором rentId.
+      description: Возвращает предложение по аренде с идентификатором offerId.
       parameters:
         - in: path
-          name: rentId
+          name: offerId
           required: true
           schema:
             type: string
@@ -92,7 +92,7 @@ paths:
                 $ref: '#/components/schemas/rentOfferFull'
 
         "404":
-          description: Предложение rentId не обнаружено
+          description: Предложение offerId не обнаружено
           content:
             application/json:
               schema:
@@ -103,7 +103,7 @@ paths:
       tags:
         - rent-offers
       summary: Создание нового предложения по аренде
-      description: Возвращает новое предложение по аренде с идентификатором rentId.
+      description: Возвращает новое предложение по аренде с идентификатором offerId.
       parameters:
         - in: header
           name: X-Token
@@ -114,7 +114,7 @@ paths:
           required:
             true
         - in: path
-          name: rentId
+          name: offerId
           required: true
           schema:
             type: string
@@ -152,7 +152,7 @@ paths:
                 $ref: '#/components/schemas/unauthorizedUser'
 
         "404":
-          description: Предложение rentId не обнаружено
+          description: Предложение offerId не обнаружено
           content:
             application/json:
               schema:
@@ -162,7 +162,7 @@ paths:
       tags:
         - rent-offers
       summary: Редактирование информации по аренде
-      description: Возвращает отредактированное предложение по аренде с идентификатором rentId.
+      description: Возвращает отредактированное предложение по аренде с идентификатором offerId.
       parameters:
         - in: header
           name: X-Token
@@ -173,7 +173,7 @@ paths:
           required:
             true
         - in: path
-          name: rentId
+          name: offerId
           required: true
           schema:
             type: string
@@ -218,7 +218,7 @@ paths:
                 $ref: '#/components/schemas/forbiddenResponse'
 
         "404":
-          description: Предложение rentId не обнаружено
+          description: Предложение offerId не обнаружено
           content:
             application/json:
               schema:
@@ -239,7 +239,7 @@ paths:
           required:
             true
         - in: path
-          name: rentId
+          name: offerId
           required: true
           schema:
             type: string
@@ -251,21 +251,21 @@ paths:
           description: Предложение по аренде удалено
 
         "404":
-          description: Предложение rentId не обнаружено
+          description: Предложение offerId не обнаружено
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/notFoundData'
 
-  /comments/{rentId}:
+  /comments/{offerId}:
     get:
       tags:
         - comments
       summary: Получение списка комментариев к предложению
-      description: Возвращает список комментариев для предложения с идентификатором rentId.
+      description: Возвращает список комментариев для предложения с идентификатором offerId.
       parameters:
         - in: path
-          name: rentId
+          name: offerId
           required: true
           schema:
             type: string
@@ -274,7 +274,7 @@ paths:
 
       responses:
         "200":
-          description: Массив комментариев по предложению rentId
+          description: Массив комментариев по предложению offerId
           content:
             application/json:
               schema:
@@ -286,7 +286,7 @@ paths:
                     - type: object
 
         "404":
-          description: Предложение rentId не обнаружено
+          description: Предложение offerId не обнаружено
           content:
             application/json:
               schema:
@@ -297,7 +297,7 @@ paths:
       tags:
         - comments
       summary: Добавление нового комментария
-      description: Добавляет новый комментарий для предложения с идентификатором rentId.
+      description: Добавляет новый комментарий для предложения с идентификатором offerId.
       parameters:
         - in: header
           name: X-Token
@@ -308,7 +308,7 @@ paths:
           required:
             true
         - in: path
-          name: rentId
+          name: offerId
           required: true
           schema:
             type: string
@@ -507,12 +507,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/unauthorizedUser'
 
-  /favorites/{rentId}/{status}:
+  /favorites/{offerId}/{status}:
     post:
       tags:
         - favorites
       summary: Изменение статуса избранного объявления
-      description: Добавление или удаление предложения в/из избранного. Возвращает предложение с идентификатором rentId с актуальным состоянием поля isFavorite
+      description: Добавление или удаление предложения в/из избранного. Возвращает предложение с идентификатором offerId с актуальным состоянием поля isFavorite
       parameters:
         - in: header
           name: X-Token
@@ -523,7 +523,7 @@ paths:
           required:
             true
         - in: path
-          name: rentId
+          name: offerId
           required: true
           schema:
             type: string
@@ -560,7 +560,7 @@ paths:
                 $ref: '#/components/schemas/unauthorizedUser'
 
         "404":
-          description: Предложение rentId не обнаружено
+          description: Предложение offerId не обнаружено
           content:
             application/json:
               schema:
@@ -572,7 +572,7 @@ components:
       type: object
 
       properties:
-        rentId:
+        offerId:
           type: string
           example: 63c95f619aec98932211d596
 
@@ -620,7 +620,7 @@ components:
       type: object
 
       properties:
-        rentId:
+        offerId:
           type: string
           example: 63c95f619aec98932211d596
 
@@ -772,7 +772,7 @@ components:
       type: object
 
       properties:
-        rentId:
+        offerId:
           type: string
           example: 63c95f619aec98932211d596
 
