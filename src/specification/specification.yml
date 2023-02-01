@@ -508,7 +508,7 @@ paths:
                 $ref: '#/components/schemas/unauthorizedUser'
 
   /favorites/{offerId}/{status}:
-    post:
+    patch:
       tags:
         - favorites
       summary: Изменение статуса избранного объявления
