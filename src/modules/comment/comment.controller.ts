@@ -7,6 +7,7 @@ import { Component } from '../../types/component.types.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
 import { fillDTO } from '../../utils/common.js';
 import { CommentServiceInterface } from './comment-service.interface.js';
+import CreateCommentDTO from './dto/create-comment.dto.js';
 import CommentResponse from './response/comment.response.js';
 
 @injectable()
@@ -20,7 +21,7 @@ export default class CommentController extends Controller {
     this.logger.info('Register routes for CommentController...');
 
     this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.find});
-    // this.addRoute({path: '/:offerId', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Post, handler: this.create});
   }
 
   public async find(req: Request, res: Response): Promise<void> {
@@ -32,7 +33,15 @@ export default class CommentController extends Controller {
   }
 
 
-  // public create(_req: Request, _res: Response): void {
+  public async create(
+    req: Request<Record<string, unknown>, Record<string, unknown>, CreateCommentDTO>,
+    res: Response): Promise<void> {
 
-  // }
+    const {body} = req;
+
+    const newComment = await this.commentService.create(body);
+    const newCommentResponse = fillDTO(CommentResponse, newComment);
+
+    this.send(res, StatusCodes.CREATED, newCommentResponse);
+  }
 }
