@@ -5,7 +5,9 @@ import { Controller } from '../../common/controller/controller.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { Component } from '../../types/component.types.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
+import { fillDTO } from '../../utils/common.js';
 import { CommentServiceInterface } from './comment-service.interface.js';
+import CommentResponse from './response/comment.response.js';
 
 @injectable()
 export default class CommentController extends Controller {
@@ -24,8 +26,9 @@ export default class CommentController extends Controller {
   public async find(req: Request, res: Response): Promise<void> {
     const offerId = req.params.offerId;
     const comments = await this.commentService.findByOfferId(offerId);
+    const commentResponse = fillDTO(CommentResponse, comments);
 
-    this.send(res, StatusCodes.OK, comments);
+    this.send(res, StatusCodes.OK, commentResponse);
   }
 
 
