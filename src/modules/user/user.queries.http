@@ -25,3 +25,19 @@ Content-Type: application/json
 }
 
 ###
+
+## Проверка авторизации пользователя
+
+GET http://localhost:7777/users/login HTTP/1.1
+Content-Type: application/json
+# TODO - записать X-Token в заголовки
+
+###
+
+## Завершение работы пользователя
+
+DELETE http://localhost:7777/users/logout HTTP/1.1
+Content-Type: application/json
+# TODO - записать X-Token в заголовки
+
+###

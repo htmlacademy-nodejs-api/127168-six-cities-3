@@ -25,6 +25,8 @@ export default class UserController extends Controller {
 
     this.addRoute({path: '/register', method: HttpMethod.Post, handler: this.create});
     this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
+    this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.checkAuth});
+    this.addRoute({path: '/logout', method: HttpMethod.Delete, handler: this.logout});
   }
 
   public async create(
@@ -67,6 +69,22 @@ export default class UserController extends Controller {
       );
     }
 
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'Not implemented',
+      'UserController',
+    );
+  }
+
+  public async checkAuth(_req: Request, _res: Response) {
+    throw new HttpError(
+      StatusCodes.NOT_IMPLEMENTED,
+      'Not implemented',
+      'UserController',
+    );
+  }
+
+  public async logout(_req: Request, _res: Response) {
     throw new HttpError(
       StatusCodes.NOT_IMPLEMENTED,
       'Not implemented',
