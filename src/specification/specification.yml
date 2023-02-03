@@ -48,6 +48,51 @@ paths:
                     - $ref: '#/components/schemas/rentOfferMin'
                     - type: object
 
+    post:
+      tags:
+        - rent-offers
+      summary: Создание нового предложения по аренде
+      description: Возвращает новое предложение по аренде с идентификатором offerId.
+      parameters:
+        - in: header
+          name: X-Token
+          schema:
+            type: string
+            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+          description: Токен авторизации
+          required:
+            true
+
+      requestBody:
+        description: Данные по новому предложению.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/newRentOffer'
+        required: true
+
+      responses:
+        "201":
+          description: Предложение по аренде создано. Объект предложения
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/rentOfferFull'
+
+        "400":
+          description: Невалидные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidData'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
+
   /rent-offers/premium:
     get:
       tags:
@@ -90,66 +135,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/rentOfferFull'
-
-        "404":
-          description: Предложение offerId не обнаружено
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/notFoundData'
-
-
-    post:
-      tags:
-        - rent-offers
-      summary: Создание нового предложения по аренде
-      description: Возвращает новое предложение по аренде с идентификатором offerId.
-      parameters:
-        - in: header
-          name: X-Token
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
-          description: Токен авторизации
-          required:
-            true
-        - in: path
-          name: offerId
-          required: true
-          schema:
-            type: string
-            example: 63c95f619aec98932211d596
-          description: Идентификатор предложения по аренде
-
-      requestBody:
-        description: Данные по новому предложению.
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/newRentOffer'
-        required: true
-
-      responses:
-        "201":
-          description: Предложение по аренде создано. Объект предложения
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/rentOfferFull'
-
-        "400":
-          description: Невалидные данные.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/invalidData'
-
-        "401":
-          description: Пользователь не авторизован.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/unauthorizedUser'
 
         "404":
           description: Предложение offerId не обнаружено

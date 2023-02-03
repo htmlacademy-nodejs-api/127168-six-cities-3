@@ -17,14 +17,16 @@ export default class Application {
     @inject(Component.LoggerInterface) private logger: LoggerInterface,
     @inject(Component.ConfigInterface) private config: ConfigInterface,
     @inject(Component.DatabaseInterface) private databaseClient: DatabaseInterface,
-    @inject(Component.CommentController) private commentController: ControllerInterface,
     @inject(Component.ExceptionFilterInterface) private exceptionFilter: ExceptionFilterInterface,
+    @inject(Component.RentOfferController) private rentOfferController: ControllerInterface,
     @inject(Component.UserController) private userController: ControllerInterface,
+    @inject(Component.CommentController) private commentController: ControllerInterface,
   ) {
     this.expressApp = express();
   }
 
   public initRoutes() {
+    this.expressApp.use('/rent-offers', this.rentOfferController.router);
     this.expressApp.use('/users', this.userController.router);
     this.expressApp.use('/comments', this.commentController.router);
   }

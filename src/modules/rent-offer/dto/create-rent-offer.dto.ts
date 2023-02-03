@@ -8,15 +8,15 @@ export default class CreateRentOfferDTO {
   public coordinates!: [number, number];
   public propertyType!: PropertyType;
   public price!: number;
-  public rating!: number;
+  public rating!: number; // TODO - убрать при отладке
   public preview!: string;
   public photos!: string[];
   public numRooms!: number;
   public numGuests!: number;
   public amenities!: string[];
-  public postDate!: Date;
+  public postDate!: Date; // TODO - убрать при отладке
   public premium!: boolean;
   public favorite!: boolean;
-  public numComments!: number;
+  public numComments!: number; // TODO - убрать при отладке
   public userId!: string;
 }
