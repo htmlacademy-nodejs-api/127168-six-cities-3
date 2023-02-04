@@ -33,7 +33,7 @@ export default class RentOfferController extends Controller {
   public async index(
     _req: Request,
     res: Response<Record<string, unknown>, Record<string, unknown>>
-  ) {
+  ): Promise<void> {
     const offers = await this.rentOfferService.find();
     const offersResponse = fillDTO(RentOfferMinResponse, offers);
     this.ok(res, offersResponse);

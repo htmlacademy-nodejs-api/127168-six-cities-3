@@ -13,4 +13,5 @@ export const Component = {
   ExceptionFilterInterface: Symbol.for('ExceptionFilterInterface'),
   UserController: Symbol.for('UserController'),
   RentOfferController: Symbol.for('RentOfferController'),
+  FavoriteOffersController: Symbol.for('FavoriteOffersController'),
 } as const;
