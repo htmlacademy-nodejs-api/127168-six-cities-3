@@ -4,6 +4,7 @@ import crypto from 'crypto';
 import { PropertyType } from '../types/property-type.enum.js';
 import { UserStatus } from '../types/user-status.enum.js';
 import { RentOffer } from '../types/rent-offer.type.js';
+import { ClassConstructor, plainToInstance } from 'class-transformer';
 
 export const createRentOffer = (row: string): RentOffer => {
   const tokens = row.replace('\n', '').split('\t');
@@ -51,3 +52,10 @@ export const createSHA256 = (line: string, salt: string): string => {
   const shaHasher = crypto.createHmac('sha256', salt);
   return shaHasher.update(line).digest('hex');
 };
+
+export const fillDTO = <T, V>(someDTO: ClassConstructor<T>, plainObject: V) =>
+  plainToInstance(someDTO, plainObject, {excludeExtraneousValues: true});
+
+export const createErrorObject = (message: string) => ({
+  error: message,
+});

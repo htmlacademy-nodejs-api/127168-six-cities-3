@@ -1,0 +1,43 @@
+# Пользователи
+## Регистрация пользователя
+
+POST http://localhost:7777/users/register HTTP/1.1
+Content-Type: application/json
+
+{
+  "username": "New_User",
+  "email": "newuser@gmail.com",
+  "avatar": "avatar.png",
+  "userStatus": "Pro",
+  "password": "blablabla"
+}
+
+###
+
+## Авторизация пользователя
+
+POST http://localhost:7777/users/login HTTP/1.1
+Content-Type: application/json
+
+{
+  "email": "newuser@gmail.com",
+  "password": "123456"
+}
+
+###
+
+## Проверка авторизации пользователя
+# TODO - записать X-Token в заголовки
+
+GET http://localhost:7777/users/login HTTP/1.1
+Content-Type: application/json
+
+###
+
+## Завершение работы пользователя
+# TODO - записать X-Token в заголовки
+
+DELETE http://localhost:7777/users/logout HTTP/1.1
+Content-Type: application/json
+
+###
