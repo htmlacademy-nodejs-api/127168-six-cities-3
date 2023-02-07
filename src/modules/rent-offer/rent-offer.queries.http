@@ -1,7 +1,7 @@
 # Предложения об аренде
 ## Получить список объявлений
 
-GET http://localhost:7777/rent-offers HTTP/1.1
+GET http://localhost:7777/rent-offers?limit=10 HTTP/1.1
 Content-Type: application/json
 
 ###
@@ -60,38 +60,16 @@ Content-Type: application/json
 
 ## Редактировать предложение об аренде
 
-PUT http://localhost:7777/rent-offers/63dd55c86535a4d5b29c06fd HTTP/1.1
+PATCH http://localhost:7777/rent-offers/63d6cfe9344cbe4504b5125d HTTP/1.1
 Content-Type: application/json
 
 {
-  "title": "Updated offer",
+  "title": "Updated offer 2",
   "description": "It is description!",
   "city": "Hamburg",
   "coordinates": [50.938361, 6.959974],
   "propertyType": "Room",
-  "price": 2026,
-  "rating": 2,
-  "preview": "preview002.jpg",
-  "photos": [
-    "photo002-000.jpg",
-    "photo002-001.jpg",
-    "photo002-002.jpg",
-    "photo002-003.jpg",
-    "photo002-004.jpg",
-    "photo002-005.jpg"
-  ],
-  "numRooms": 4,
-  "numGuests": 5,
-  "amenities": [
-    "Baby seat",
-    "Towels",
-    "Washer"
-  ],
-  "postDate": "2023-01-23T14:08:52.743Z",
-  "premium": false,
-  "favorite": true,
-  "numComments": 2,
-  "userId": "63d289f81b1caa245e7f0e22"
+  "price": 3000
 }
 
 ###

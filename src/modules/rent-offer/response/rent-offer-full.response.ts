@@ -1,10 +1,11 @@
-import { Expose } from 'class-transformer';
+import { Expose, Type } from 'class-transformer';
 import { City } from '../../../types/city.enum.js';
 import { PropertyType } from '../../../types/property-type.enum.js';
+import UserResponse from '../../user/response/user.response.js';
 
 export default class RentOfferFullResponse {
-  @Expose()
-  public _id!: string; // TODO - заменить имя на offerId (почему-то id постоянно меняется, пофиксить позже)
+  @Expose({name: 'id'})
+  public offerId!: string;
 
   @Expose()
   public title!: string;
@@ -42,8 +43,8 @@ export default class RentOfferFullResponse {
   @Expose()
   public amenities!: string[];
 
-  @Expose()
-  public postDate!: Date; // TODO - заменить потом на createdAt
+  @Expose({name: 'createdAt'})
+  public postDate!: Date;
 
   @Expose()
   public premium!: boolean;
@@ -54,6 +55,7 @@ export default class RentOfferFullResponse {
   @Expose()
   public numComments!: number;
 
-  @Expose()
-  public userId!: object; // TODO - разобраться с юзером
+  @Expose({name: 'userId'})
+  @Type(() => UserResponse)
+  public user!: UserResponse;
 }

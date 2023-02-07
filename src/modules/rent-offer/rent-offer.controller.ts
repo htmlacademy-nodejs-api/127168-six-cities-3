@@ -1,3 +1,4 @@
+import * as core from 'express-serve-static-core';
 import { Request, Response } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
@@ -11,6 +12,12 @@ import CreateRentOfferDTO from './dto/create-rent-offer.dto.js';
 import { RentOfferServiceInterface } from './rent-offer-service.interface.js';
 import RentOfferFullResponse from './response/rent-offer-full.response.js';
 import RentOfferMinResponse from './response/rent-offer-min.response.js';
+import UpdateRentOfferDTO from './dto/update-rent-offer.dto.js';
+import { RequestQuery } from '../../types/request-query.type.js';
+
+type ParamsGetOffer = {
+  offerId: string;
+}
 
 @injectable()
 export default class RentOfferController extends Controller {
@@ -25,16 +32,18 @@ export default class RentOfferController extends Controller {
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
     this.addRoute({path: '/premium', method: HttpMethod.Get, handler: this.findPremium});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.find});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Put, handler: this.update});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.show});
+    this.addRoute({path: '/:offerId', method: HttpMethod.Patch, handler: this.update});
     this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.delete});
   }
 
   public async index(
-    _req: Request,
+    req: Request<unknown, unknown, unknown, RequestQuery>,
     res: Response<Record<string, unknown>, Record<string, unknown>>
   ): Promise<void> {
-    const offers = await this.rentOfferService.find();
+    const limit = req.query.limit;
+
+    const offers = await this.rentOfferService.find(limit);
     const offersResponse = fillDTO(RentOfferMinResponse, offers);
     this.ok(res, offersResponse);
   }
@@ -60,15 +69,14 @@ export default class RentOfferController extends Controller {
     this.ok(res, premiumOffersResponse);
   }
 
-  public async find(
-    req: Request,
+  public async show(
+    req: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response<Record<string, unknown>, Record<string, unknown>>
   ) {
     const offerId = req.params.offerId;
+    const offer = await this.rentOfferService.findById(offerId);
 
-    const existOffer = await this.rentOfferService.exists(offerId);
-
-    if (!existOffer) {
+    if (!offer) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
         `Offer with id ${offerId} not found.`,
@@ -76,21 +84,20 @@ export default class RentOfferController extends Controller {
       );
     }
 
-    const offer = await this.rentOfferService.findById(offerId);
     const offerResponse = fillDTO(RentOfferFullResponse, offer);
     this.ok(res, offerResponse);
   }
 
   public async update(
-    req: Request,
+    req: Request<core.ParamsDictionary | ParamsGetOffer, Record<string, unknown>, UpdateRentOfferDTO>,
     res: Response): Promise<void> {
 
     const {body} = req;
     const offerId = req.params.offerId;
 
-    const existOffer = await this.rentOfferService.exists(offerId);
+    const updatedOffer = await this.rentOfferService.updateById(offerId, body);
 
-    if (!existOffer) {
+    if (!updatedOffer) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
         `Offer with id ${offerId} not found.`,
@@ -98,21 +105,20 @@ export default class RentOfferController extends Controller {
       );
     }
 
-    const updatedOffer = await this.rentOfferService.updateById(offerId, body);
     const updatedOfferResponse = fillDTO(RentOfferFullResponse, updatedOffer);
 
     this.ok(res, updatedOfferResponse);
   }
 
   public async delete(
-    req: Request,
+    req: Request<core.ParamsDictionary | ParamsGetOffer>,
     res: Response): Promise<void> {
 
     const offerId = req.params.offerId;
 
-    const existOffer = await this.rentOfferService.exists(offerId);
+    const deletedOffer = await this.rentOfferService.deleteById(offerId);
 
-    if (!existOffer) {
+    if (!deletedOffer) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
         `Offer with id ${offerId} not found.`,
@@ -120,9 +126,6 @@ export default class RentOfferController extends Controller {
       );
     }
 
-    const deletedOffer = await this.rentOfferService.deleteById(offerId);
-    const deletedOfferResponse = fillDTO(RentOfferFullResponse, deletedOffer);
-
-    this.noContent(res, deletedOfferResponse);
+    this.noContent(res, deletedOffer);
   }
 }
