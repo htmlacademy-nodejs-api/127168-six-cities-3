@@ -277,7 +277,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/notFoundData'
 
-
+  /comments:
     post:
       tags:
         - comments
@@ -292,13 +292,6 @@ paths:
           description: Токен авторизации
           required:
             true
-        - in: path
-          name: offerId
-          required: true
-          schema:
-            type: string
-            example: 63c95f619aec98932211d596
-          description: Идентификатор объявления
 
       requestBody:
         description: Данные по новому комментарию.
@@ -329,7 +322,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/unauthorizedUser'
-
 
   /users/register:
     post:
