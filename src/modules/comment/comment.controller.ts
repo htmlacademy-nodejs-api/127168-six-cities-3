@@ -13,6 +13,7 @@ import { CommentServiceInterface } from './comment-service.interface.js';
 import CreateCommentDTO from './dto/create-comment.dto.js';
 import CommentResponse from './response/comment.response.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
+import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -35,7 +36,12 @@ export default class CommentController extends Controller {
       handler: this.find,
       middlewares: [new ValidateObjectIdMiddleware('offerId')]
     });
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateCommentDTO)]
+    });
   }
 
   public async find(
