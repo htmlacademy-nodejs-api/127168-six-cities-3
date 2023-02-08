@@ -12,6 +12,7 @@ import { RentOfferServiceInterface } from '../rent-offer/rent-offer-service.inte
 import { CommentServiceInterface } from './comment-service.interface.js';
 import CreateCommentDTO from './dto/create-comment.dto.js';
 import CommentResponse from './response/comment.response.js';
+import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -28,7 +29,12 @@ export default class CommentController extends Controller {
 
     this.logger.info('Register routes for CommentController...');
 
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.find});
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.find,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
   }
 

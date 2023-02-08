@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { inject, injectable } from 'inversify';
 import { Controller } from '../../common/controller/controller.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 import { Component } from '../../types/component.types.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
 import { fillDTO } from '../../utils/common.js';
@@ -19,7 +20,12 @@ export default class FavoriteOffersController extends Controller {
     this.logger.info('Register routes for FavoriteOffersController');
 
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/:offerId/:status', method: HttpMethod.Patch, handler: this.patch});
+    this.addRoute({
+      path: '/:offerId/:status',
+      method: HttpMethod.Patch,
+      handler: this.patch,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
   }
 
   public async index(

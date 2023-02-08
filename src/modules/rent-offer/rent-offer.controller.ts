@@ -15,6 +15,7 @@ import RentOfferMinResponse from './response/rent-offer-min.response.js';
 import UpdateRentOfferDTO from './dto/update-rent-offer.dto.js';
 import { RequestQuery } from '../../types/request-query.type.js';
 import { CommentServiceInterface } from '../comment/comment-service.interface.js';
+import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -34,9 +35,23 @@ export default class RentOfferController extends Controller {
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
     this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
     this.addRoute({path: '/premium', method: HttpMethod.Get, handler: this.findPremium});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Get, handler: this.show});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Patch, handler: this.update});
-    this.addRoute({path: '/:offerId', method: HttpMethod.Delete, handler: this.delete});
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Get,
+      handler: this.show,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Patch,
+      handler: this.update,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]});
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+    });
   }
 
   public async index(
