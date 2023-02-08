@@ -14,6 +14,7 @@ import RentOfferFullResponse from './response/rent-offer-full.response.js';
 import RentOfferMinResponse from './response/rent-offer-min.response.js';
 import UpdateRentOfferDTO from './dto/update-rent-offer.dto.js';
 import { RequestQuery } from '../../types/request-query.type.js';
+import { CommentServiceInterface } from '../comment/comment-service.interface.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -24,6 +25,7 @@ export default class RentOfferController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
     @inject(Component.RentOfferServiceInterface) private readonly rentOfferService: RentOfferServiceInterface,
+    @inject(Component.CommentServiceInterface) private readonly commentService: CommentServiceInterface,
   ) {
     super(logger);
 
@@ -126,6 +128,7 @@ export default class RentOfferController extends Controller {
       );
     }
 
+    await this.commentService.deleteByOfferId(offerId);
     this.noContent(res, deletedOffer);
   }
 }
