@@ -16,6 +16,7 @@ import UpdateRentOfferDTO from './dto/update-rent-offer.dto.js';
 import { RequestQuery } from '../../types/request-query.type.js';
 import { CommentServiceInterface } from '../comment/comment-service.interface.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
+import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -33,7 +34,12 @@ export default class RentOfferController extends Controller {
     this.logger.info('Register routes for RentOfferController');
 
     this.addRoute({path: '/', method: HttpMethod.Get, handler: this.index});
-    this.addRoute({path: '/', method: HttpMethod.Post, handler: this.create});
+    this.addRoute({
+      path: '/',
+      method: HttpMethod.Post,
+      handler: this.create,
+      middlewares: [new ValidateDtoMiddleware(CreateRentOfferDTO)]
+    });
     this.addRoute({path: '/premium', method: HttpMethod.Get, handler: this.findPremium});
     this.addRoute({
       path: '/:offerId',
@@ -45,7 +51,10 @@ export default class RentOfferController extends Controller {
       path: '/:offerId',
       method: HttpMethod.Patch,
       handler: this.update,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]});
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(UpdateRentOfferDTO)
+      ]});
     this.addRoute({
       path: '/:offerId',
       method: HttpMethod.Delete,
