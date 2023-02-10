@@ -1,6 +1,7 @@
 import CreateRentOfferDTO from './dto/create-rent-offer.dto.js';
 import { DocumentType } from '@typegoose/typegoose';
 import { RentOfferEntity } from './rent-offer.entity.js';
+import UpdateRentOfferDTO from './dto/update-rent-offer.dto.js';
 
 
 export interface RentOfferServiceInterface {
@@ -10,7 +11,7 @@ export interface RentOfferServiceInterface {
   findPremium(): Promise<DocumentType<RentOfferEntity>[]>;
   findFavorite(): Promise<DocumentType<RentOfferEntity>[]>;
   deleteById(offerId: string): Promise<DocumentType<RentOfferEntity> | null>;
-  updateById(offerId: string, dto: CreateRentOfferDTO): Promise<DocumentType<RentOfferEntity> | null>;
+  updateById(offerId: string, dto: UpdateRentOfferDTO): Promise<DocumentType<RentOfferEntity> | null>;
   updateCommentCountAndRating(offerId: string, newRate: number): Promise<DocumentType<RentOfferEntity> | null>;
   exists(documentId: string): Promise<boolean>;
 }

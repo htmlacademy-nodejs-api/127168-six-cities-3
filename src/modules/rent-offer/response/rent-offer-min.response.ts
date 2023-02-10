@@ -3,8 +3,8 @@ import { City } from '../../../types/city.enum.js';
 import { PropertyType } from '../../../types/property-type.enum.js';
 
 export default class RentOfferMinResponse {
-  @Expose()
-  public _id!: string; // TODO - заменить имя на offerId (почему-то id постоянно меняется, пофиксить позже)
+  @Expose({name: 'id'})
+  public offerId!: string;
 
   @Expose()
   public title!: string;
@@ -24,8 +24,8 @@ export default class RentOfferMinResponse {
   @Expose()
   public preview!: string;
 
-  @Expose()
-  public postDate!: Date; // TODO - заменить потом на createdAt
+  @Expose({name: 'createdAt'})
+  public postDate!: Date;
 
   @Expose()
   public premium!: boolean;

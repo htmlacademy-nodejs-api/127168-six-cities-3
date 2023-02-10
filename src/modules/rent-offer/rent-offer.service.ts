@@ -4,6 +4,7 @@ import { LoggerInterface } from '../../common/logger/logger.interface.js';
 import { Component } from '../../types/component.types.js';
 import { SortType } from '../../types/sort-type.enum.js';
 import CreateRentOfferDTO from './dto/create-rent-offer.dto.js';
+import UpdateRentOfferDTO from './dto/update-rent-offer.dto.js';
 import { RentOfferServiceInterface } from './rent-offer-service.interface.js';
 import { OfferCounts } from './rent-offer.constant.js';
 import { RentOfferEntity } from './rent-offer.entity.js';
@@ -60,7 +61,7 @@ export default class RentOfferService implements RentOfferServiceInterface {
       .exec();
   }
 
-  public async updateById(offerId: string, dto: CreateRentOfferDTO): Promise<DocumentType<RentOfferEntity> | null> {
+  public async updateById(offerId: string, dto: UpdateRentOfferDTO): Promise<DocumentType<RentOfferEntity> | null> {
     return this.rentOfferModel
       .findByIdAndUpdate(offerId, dto, {new: true})
       .populate(['userId'])
