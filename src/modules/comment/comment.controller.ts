@@ -14,6 +14,7 @@ import CreateCommentDTO from './dto/create-comment.dto.js';
 import CommentResponse from './response/comment.response.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
+import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -34,7 +35,10 @@ export default class CommentController extends Controller {
       path: '/:offerId',
       method: HttpMethod.Get,
       handler: this.find,
-      middlewares: [new ValidateObjectIdMiddleware('offerId')]
+      middlewares: [
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
+      ]
     });
     this.addRoute({
       path: '/',
@@ -48,18 +52,8 @@ export default class CommentController extends Controller {
     req: Request<core.ParamsDictionary | ParamsGetOffer, object, object>,
     res: Response): Promise<void> {
     const offerId = req.params.offerId;
-
-    if (!await this.rentOfferService.exists(offerId)) {
-      throw new HttpError(
-        StatusCodes.NOT_FOUND,
-        `Offer with id ${offerId} not found.`,
-        'CommentController',
-      );
-    }
-
     const comments = await this.commentService.findByOfferId(offerId);
     const commentResponse = fillDTO(CommentResponse, comments);
-
     this.send(res, StatusCodes.OK, commentResponse);
   }
 
@@ -71,6 +65,7 @@ export default class CommentController extends Controller {
 
     const {body} = req;
 
+    // TODO - добаботать обработчик с передачей маршрута через адрес (для проверки middleware)
     if (!await this.rentOfferService.exists(body.offerId)) {
       throw new HttpError(
         StatusCodes.NOT_FOUND,
