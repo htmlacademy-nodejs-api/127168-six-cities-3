@@ -41,3 +41,17 @@ DELETE http://localhost:7777/users/logout HTTP/1.1
 Content-Type: application/json
 
 ###
+
+## Отправка аватарки пользователю
+
+POST http://localhost:7777/users/63d289f81b1caa245e7f0e22/avatar HTTP/1.1
+Content-Type: multipart/form-data; boundary=----WebKitFormBoundary7MA4YWxkTrZu0gW
+
+------WebKitFormBoundary7MA4YWxkTrZu0gW
+Content-Disposition: form-data; name="avatar"; filename="screen.jpeg"
+Content-Type: image/jpeg
+
+< /Users/samoshk1n/Desktop/cropped-IMG_0449_2.jpeg
+------WebKitFormBoundary7MA4YWxkTrZu0gW--
+
+###
