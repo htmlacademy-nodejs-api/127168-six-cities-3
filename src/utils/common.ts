@@ -1,3 +1,4 @@
+import * as jose from 'jose';
 import { Amenities } from '../types/amenities.enum.js';
 import { City } from '../types/city.enum.js';
 import crypto from 'crypto';
@@ -59,3 +60,10 @@ export const fillDTO = <T, V>(someDTO: ClassConstructor<T>, plainObject: V) =>
 export const createErrorObject = (message: string) => ({
   error: message,
 });
+
+export const createJWT = async (algoritm: string, jwtSecret: string, payload: object): Promise<string> =>
+  new jose.SignJWT({...payload})
+    .setProtectedHeader({ alg: algoritm})
+    .setIssuedAt()
+    .setExpirationTime('2d')
+    .sign(crypto.createSecretKey(jwtSecret, 'utf-8'));
