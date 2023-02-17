@@ -10,11 +10,11 @@ Content-Type: application/json
 
 POST http://localhost:7777/comments/63d6cfe9344cbe4504b5125d HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZWU5MzFhY2E3Yjc2OWY5MjI3MDkwMiIsImVtYWlsIjoibmV3dXNlckBnbWFpbC5jb20iLCJpYXQiOjE2NzY2MzczMjgsImV4cCI6MTY3NjgxMDEyOH0.N9VfcJQd48FOgv1gKTtO-xMQ3BKd9gXyQoTekckQ9Z8
 
 {
   "text": "Добавлен новый коммент",
-  "rating": 4.2,
-  "userId": "63d289f81b1caa245e7f0e22"
+  "rating": 2
 }
 
 ###
