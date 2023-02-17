@@ -15,6 +15,7 @@ import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.mid
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 // import CreateCommentClientDTO from './dto/create-comment.client.dto.js';
 import CreateCommentDTO from './dto/create-comment.dto.js';
+import { PrivateRouteMiddleware } from '../../common/middlewares/private-route.middleware.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -45,6 +46,7 @@ export default class CommentController extends Controller {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
+        new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(CreateCommentDTO),
         new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
