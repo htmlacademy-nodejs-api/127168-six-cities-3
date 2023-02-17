@@ -1,4 +1,4 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDateString, IsEnum, IsMongoId, IsNumber, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDateString, IsEnum, IsNumber, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { Amenities } from '../../../types/amenities.enum.js';
 import { City } from '../../../types/city.enum.js';
 import { PropertyType } from '../../../types/property-type.enum.js';
@@ -65,6 +65,5 @@ export default class CreateRentOfferDTO {
   @IsNumber()
   public numComments!: number; // TODO - убрать при отладке, сейчас оставляем, чтобы не сломалось
 
-  @IsMongoId({message: 'userId field must be valid an id'})
   public userId!: string;
 }

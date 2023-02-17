@@ -93,8 +93,8 @@ export default class RentOfferController extends Controller {
     req: Request<Record<string, unknown>, Record<string, unknown>, CreateRentOfferDTO>,
     res: Response
   ): Promise<void> {
-    const {body} = req;
-    const newOffer = await this.rentOfferService.create(body);
+    const {body, user} = req;
+    const newOffer = await this.rentOfferService.create({...body, userId: user.id});
     const newOfferResponse = fillDTO(RentOfferFullResponse, newOffer);
     this.created(res, newOfferResponse);
   }
