@@ -97,12 +97,9 @@ export default class UserController extends Controller {
     this.ok(res, fillDTO(LoggedUserResponse, {email: user.email, token}));
   }
 
-  public async checkAuth(_req: Request, _res: Response) {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
-    );
+  public async checkAuth(req: Request, res: Response) {
+    const user = await this.userService.findByEmail(req.user.email);
+    this.ok(res, fillDTO(UserResponse, user));
   }
 
   public async logout(_req: Request, _res: Response) {
