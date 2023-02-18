@@ -13,7 +13,6 @@ import CommentResponse from './response/comment.response.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
-// import CreateCommentClientDTO from './dto/create-comment.client.dto.js';
 import CreateCommentDTO from './dto/create-comment.dto.js';
 import { PrivateRouteMiddleware } from '../../common/middlewares/private-route.middleware.js';
 
@@ -62,7 +61,6 @@ export default class CommentController extends Controller {
     const commentResponse = fillDTO(CommentResponse, comments);
     this.send(res, StatusCodes.OK, commentResponse);
   }
-
 
   public async create(
     req: Request<core.ParamsDictionary | ParamsGetOffer, object, CreateCommentDTO>,

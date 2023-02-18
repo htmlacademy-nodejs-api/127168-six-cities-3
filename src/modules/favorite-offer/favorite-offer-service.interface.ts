@@ -4,4 +4,5 @@ import { FavoriteOfferEntity } from './favorite-offer.entity.js';
 
 export interface FavoriteOfferServiceInterface {
   create(dto: CreateFavoriteOfferDTO): Promise<DocumentType<FavoriteOfferEntity>>;
+  exists(userId: string, offerId: string): Promise<boolean>;
 }

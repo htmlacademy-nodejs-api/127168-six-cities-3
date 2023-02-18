@@ -14,4 +14,9 @@ export default class FavoriteOfferService implements FavoriteOfferServiceInterfa
   public async create(dto: CreateFavoriteOfferDTO): Promise<DocumentType<FavoriteOfferEntity>> {
     return this.favoriteOfferModel.create(dto);
   }
+
+  public async exists(userId: string, offerId: string): Promise<boolean> {
+    return (await this.favoriteOfferModel
+      .exists({userId, offerId})) !== null;
+  }
 }
