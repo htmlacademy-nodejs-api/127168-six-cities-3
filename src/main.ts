@@ -5,12 +5,14 @@ import { Container } from 'inversify';
 import { userContainer } from './modules/user/user.container.js';
 import { rentOfferContainer } from './modules/rent-offer/rent-offer.container.js';
 import { commentContainer } from './modules/comment/comment.container.js';
+import { favoriteOfferContainer } from './modules/favorite-offer/favorite-offer.container.js';
 
 const mainContainer = Container.merge(
   applicationContainer,
   userContainer,
   rentOfferContainer,
-  commentContainer
+  commentContainer,
+  favoriteOfferContainer
 );
 
 async function bootstrap() {

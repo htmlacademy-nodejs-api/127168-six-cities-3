@@ -20,7 +20,7 @@ export default class Application {
     @inject(Component.DatabaseInterface) private databaseClient: DatabaseInterface,
     @inject(Component.ExceptionFilterInterface) private exceptionFilter: ExceptionFilterInterface,
     @inject(Component.RentOfferController) private rentOfferController: ControllerInterface,
-    @inject(Component.FavoriteOffersController) private favoriteOffersController: ControllerInterface,
+    @inject(Component.FavoriteOfferController) private favoriteOffersController: ControllerInterface,
     @inject(Component.UserController) private userController: ControllerInterface,
     @inject(Component.CommentController) private commentController: ControllerInterface,
   ) {
