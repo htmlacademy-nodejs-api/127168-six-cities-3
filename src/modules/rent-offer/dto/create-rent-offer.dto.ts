@@ -1,4 +1,4 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDateString, IsEnum, IsNumber, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsEnum, IsNumber, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { Amenities } from '../../../types/amenities.enum.js';
 import { City } from '../../../types/city.enum.js';
 import { PropertyType } from '../../../types/property-type.enum.js';
@@ -28,10 +28,6 @@ export default class CreateRentOfferDTO {
   @Max(100000, {message: 'Maximum price is 100000'})
   public price!: number;
 
-  @Min(1, {message: 'Minimum rating is 1'})
-  @Max(5, {message: 'Maximum rating is 5'})
-  public rating!: number; // TODO - убрать при отладке, сейчас оставляем, чтобы не сломалось
-
   @IsString({message: 'preview must be string'})
   public preview!: string;
 
@@ -53,17 +49,8 @@ export default class CreateRentOfferDTO {
   @IsEnum(Amenities, {each: true})
   public amenities!: string[];
 
-  @IsDateString({}, {message: 'postDate must be valid ISO date'})
-  public postDate!: Date; // TODO - убрать при отладке, сейчас оставляем, чтобы не сломалось
-
   @IsBoolean()
   public premium!: boolean;
-
-  @IsBoolean()
-  public favorite!: boolean; // TODO - убрать при отладке, сейчас оставляем, чтобы не сломалось
-
-  @IsNumber()
-  public numComments!: number; // TODO - убрать при отладке, сейчас оставляем, чтобы не сломалось
 
   public userId!: string;
 }

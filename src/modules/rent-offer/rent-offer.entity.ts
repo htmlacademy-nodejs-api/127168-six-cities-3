@@ -58,7 +58,7 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
   public price!: number;
 
   @prop({
-    required: true,
+    default: 0,
     min: RatingInterval.MinRating,
     max: RatingInterval.MaxRating,
   })
@@ -92,9 +92,6 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
 
   @prop({required: true})
   public premium!: boolean;
-
-  @prop({required: true})
-  public favorite!: boolean;
 
   @prop({default: 0})
   public numComments!: number;

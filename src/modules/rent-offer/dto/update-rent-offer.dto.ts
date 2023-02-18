@@ -1,4 +1,4 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsDateString, IsEnum, IsMongoId, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsEnum, IsMongoId, IsNumber, IsOptional, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { Amenities } from '../../../types/amenities.enum.js';
 import { City } from '../../../types/city.enum.js';
 import { PropertyType } from '../../../types/property-type.enum.js';
@@ -35,11 +35,6 @@ export default class UpdateRentOfferDTO {
   public price?: number;
 
   @IsOptional()
-  @Min(1, {message: 'Minimum rating is 1'})
-  @Max(5, {message: 'Maximum rating is 5'})
-  public rating?: number; // TODO - убрать при отладке, сейчас оставляем, чтобы не сломалось
-
-  @IsOptional()
   @IsString({message: 'preview must be string'})
   public preview?: string;
 
@@ -66,20 +61,8 @@ export default class UpdateRentOfferDTO {
   public amenities?: string[];
 
   @IsOptional()
-  @IsDateString({}, {message: 'postDate must be valid ISO date'})
-  public postDate?: Date; // TODO - убрать при отладке, сейчас оставляем, чтобы не сломалось
-
-  @IsOptional()
   @IsBoolean()
   public premium?: boolean;
-
-  @IsOptional()
-  @IsBoolean()
-  public favorite?: boolean; // TODO - убрать при отладке, сейчас оставляем, чтобы не сломалось
-
-  @IsOptional()
-  @IsNumber()
-  public numComments?: number; // TODO - убрать при отладке, сейчас оставляем, чтобы не сломалось
 
   @IsOptional()
   @IsMongoId({message: 'userId field must be valid an id'})
