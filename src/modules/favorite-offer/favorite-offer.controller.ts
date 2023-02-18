@@ -38,6 +38,16 @@ export default class FavoriteOfferController extends Controller {
         new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
       ]
     });
+    this.addRoute({
+      path: '/:offerId',
+      method: HttpMethod.Delete,
+      handler: this.delete,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
+      ]
+    });
   }
 
   public async create(
@@ -59,5 +69,25 @@ export default class FavoriteOfferController extends Controller {
 
     const newFavoriteOffer = await this.favoriteOfferService.create({userId, offerId});
     this.ok(res, newFavoriteOffer);
+  }
+
+  public async delete(
+    req: Request<core.ParamsDictionary | ParamsGetOffer>,
+    res: Response<Record<string, unknown>, Record<string, unknown>>
+  ): Promise<void> {
+    const userId = req.user.id;
+    const offerId = req.params.offerId;
+
+    const deletedFavoriteOffer = await this.favoriteOfferService.delete({userId, offerId});
+
+    if (!deletedFavoriteOffer) {
+      throw new HttpError(
+        StatusCodes.NOT_FOUND,
+        `Favorite offer with userId «${userId}» and offerId «${offerId}» not found.`,
+        'FavoriteOfferController'
+      );
+    }
+
+    this.noContent(res, deletedFavoriteOffer);
   }
 }

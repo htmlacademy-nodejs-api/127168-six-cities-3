@@ -15,6 +15,12 @@ export default class FavoriteOfferService implements FavoriteOfferServiceInterfa
     return this.favoriteOfferModel.create(dto);
   }
 
+  public async delete(dto: CreateFavoriteOfferDTO): Promise<DocumentType<FavoriteOfferEntity> | null> {
+    return this.favoriteOfferModel
+      .findOneAndDelete(dto)
+      .exec();
+  }
+
   public async exists(userId: string, offerId: string): Promise<boolean> {
     return (await this.favoriteOfferModel
       .exists({userId, offerId})) !== null;
