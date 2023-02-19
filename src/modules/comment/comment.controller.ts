@@ -13,7 +13,8 @@ import CommentResponse from './response/comment.response.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
-import CreateCommentClientDTO from './dto/create-comment.client.dto.js';
+import CreateCommentDTO from './dto/create-comment.dto.js';
+import { PrivateRouteMiddleware } from '../../common/middlewares/private-route.middleware.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -44,7 +45,9 @@ export default class CommentController extends Controller {
       method: HttpMethod.Post,
       handler: this.create,
       middlewares: [
-        new ValidateDtoMiddleware(CreateCommentClientDTO),
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new ValidateDtoMiddleware(CreateCommentDTO),
         new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
       ]
     });
@@ -59,13 +62,16 @@ export default class CommentController extends Controller {
     this.send(res, StatusCodes.OK, commentResponse);
   }
 
-
   public async create(
-    req: Request<core.ParamsDictionary | ParamsGetOffer, object, CreateCommentClientDTO>,
+    req: Request<core.ParamsDictionary | ParamsGetOffer, object, CreateCommentDTO>,
     res: Response
   ): Promise<void> {
     const {offerId} = req.params;
-    const body = {...req.body, offerId};
+    const body = {
+      ...req.body,
+      offerId,
+      userId: req.user.id
+    };
     const newComment = await this.commentService.create(body);
     await this.rentOfferService.updateCommentCountAndRating(offerId, body.rating);
     const newCommentResponse = fillDTO(CommentResponse, newComment);

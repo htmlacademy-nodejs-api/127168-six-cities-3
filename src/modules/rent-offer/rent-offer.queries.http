@@ -3,6 +3,7 @@
 
 GET http://localhost:7777/rent-offers?limit=10 HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZWU5MzFhY2E3Yjc2OWY5MjI3MDkwMiIsImVtYWlsIjoibmV3dXNlckBnbWFpbC5jb20iLCJpYXQiOjE2NzY2NDA3ODIsImV4cCI6MTY3NjgxMzU4Mn0.0zMckAfaDRwcuxImjevYIiynX4OvpL4WjVMRLvAR4Vc
 
 ###
 
@@ -10,6 +11,7 @@ Content-Type: application/json
 
 POST http://localhost:7777/rent-offers HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZWU5MzFhY2E3Yjc2OWY5MjI3MDkwMiIsImVtYWlsIjoibmV3dXNlckBnbWFpbC5jb20iLCJpYXQiOjE2NzY2NDA3ODIsImV4cCI6MTY3NjgxMzU4Mn0.0zMckAfaDRwcuxImjevYIiynX4OvpL4WjVMRLvAR4Vc
 
 {
   "title": "New offer title",
@@ -18,7 +20,6 @@ Content-Type: application/json
   "coordinates": [50.938361, 6.959974],
   "propertyType": "Room",
   "price": 2026,
-  "rating": 4,
   "preview": "preview002.jpg",
   "photos": [
     "photo002-000.jpg",
@@ -37,8 +38,6 @@ Content-Type: application/json
   ],
   "postDate": "2023-01-23T14:08:52.743Z",
   "premium": false,
-  "favorite": true,
-  "numComments": 2,
   "userId": "63d289f81b1caa245e7f0e22"
 }
 

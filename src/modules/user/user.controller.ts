@@ -10,11 +10,13 @@ import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.mid
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
 import { Component } from '../../types/component.types.js';
 import { HttpMethod } from '../../types/http-method.enum.js';
-import { fillDTO } from '../../utils/common.js';
+import { createJWT, fillDTO } from '../../utils/common.js';
 import CreateUserDTO from './dto/create-user.dto.js';
 import LoginUserDTO from './dto/login-user.dto.js';
+import LoggedUserResponse from './response/logged-user.response.js';
 import UserResponse from './response/user.response.js';
 import { UserServiceInterface } from './user-service.interface.js';
+import { JWT_ALGORITM } from './user.constant.js';
 
 @injectable()
 export default class UserController extends Controller {
@@ -72,33 +74,32 @@ export default class UserController extends Controller {
 
   public async login(
     req: Request<Record<string, unknown>, Record<string, unknown>, LoginUserDTO>,
-    _res: Response
+    res: Response
   ): Promise<void> {
     const {body} = req;
 
-    const existsUser = await this.userService.findByEmail(body.email);
+    const user = await this.userService.verifyUser(body, this.configService.get('SALT'));
 
-    if (!existsUser) {
+    if (!user) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
-        `User with email ${body.email} not found.`,
-        'UserController',
+        'Unauthorized',
+        'UserController'
       );
     }
 
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
+    const token = await createJWT(
+      JWT_ALGORITM,
+      this.configService.get('JWT_SECRET'),
+      {id: user.id, email: user.email}
     );
+
+    this.ok(res, fillDTO(LoggedUserResponse, {email: user.email, token}));
   }
 
-  public async checkAuth(_req: Request, _res: Response) {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
-    );
+  public async checkAuth(req: Request, res: Response) {
+    const user = await this.userService.findByEmail(req.user.email);
+    this.ok(res, fillDTO(UserResponse, user));
   }
 
   public async logout(_req: Request, _res: Response) {

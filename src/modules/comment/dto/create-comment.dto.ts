@@ -1,4 +1,4 @@
-import { IsMongoId, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { Max, MaxLength, Min, MinLength } from 'class-validator';
 
 export default class CreateCommentDTO {
   @MinLength(5, {message: 'Minimum text length must be 5'})
@@ -9,9 +9,7 @@ export default class CreateCommentDTO {
   @Max(5, {message: 'Maximum rating is 5'})
   public rating!: number;
 
-  @IsMongoId({message: 'offerId field must be valid an id'})
   public offerId!: string;
 
-  @IsMongoId({message: 'userId field must be valid an id'})
   public userId!: string;
 }
