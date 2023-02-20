@@ -1,4 +1,4 @@
-import { IsEmail, IsEnum, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, MaxLength, MinLength } from 'class-validator';
 import { UserStatus } from '../../../types/user-status.enum.js';
 
 export default class CreateUserDTO {
@@ -8,10 +8,6 @@ export default class CreateUserDTO {
 
   @IsEmail({}, {message: 'email must be valid address'})
   public email!: string;
-
-  @IsOptional()
-  @IsString({message: 'avatar must be string'})
-  public avatar?: string;
 
   @IsEnum(UserStatus, {message: 'type must be Standart or Pro'})
   public userStatus!: UserStatus;
