@@ -18,7 +18,12 @@ export class AuthenticateMiddleware implements MiddlewareInterface {
 
     try {
       const {payload} = await jose.jwtVerify(token, createSecretKey(this.jwtSecret, 'utf-8'));
-      req.user = { email: payload.email as string, id: payload.id as string };
+      req.user = {
+        id: payload.id as string,
+        username: payload.username as string,
+        email: payload.email as string,
+        userStatus: payload.username as string,
+      };
 
       return next();
     } catch {

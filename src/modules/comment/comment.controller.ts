@@ -1,6 +1,5 @@
 import * as core from 'express-serve-static-core';
 import { Request, Response } from 'express';
-import { StatusCodes } from 'http-status-codes';
 import { inject, injectable } from 'inversify';
 import { Controller } from '../../common/controller/controller.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
@@ -60,8 +59,7 @@ export default class CommentController extends Controller {
     res: Response): Promise<void> {
     const offerId = req.params.offerId;
     const comments = await this.commentService.findByOfferId(offerId);
-    const commentResponse = fillDTO(CommentResponse, comments);
-    this.send(res, StatusCodes.OK, commentResponse);
+    this.ok(res, fillDTO(CommentResponse, comments));
   }
 
   public async create(
@@ -76,8 +74,6 @@ export default class CommentController extends Controller {
     };
     const newComment = await this.commentService.create(body);
     await this.rentOfferService.updateCommentCountAndRating(offerId, body.rating);
-    const newCommentResponse = fillDTO(CommentResponse, newComment);
-
-    this.created(res, newCommentResponse);
+    this.created(res, fillDTO(CommentResponse, newComment));
   }
 }

@@ -8,8 +8,4 @@ export default class CreateCommentDTO {
   @Min(1, {message: 'Minimum rating is 1'})
   @Max(5, {message: 'Maximum rating is 5'})
   public rating!: number;
-
-  public offerId!: string;
-
-  public userId!: string;
 }

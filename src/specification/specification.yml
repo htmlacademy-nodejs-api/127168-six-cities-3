@@ -270,6 +270,13 @@ paths:
                     - $ref: '#/components/schemas/commentData'
                     - type: object
 
+        "400":
+          description: Идентификатор написан неверно.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidObjectID'
+
         "404":
           description: Предложение offerId не обнаружено
           content:
