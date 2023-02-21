@@ -365,10 +365,10 @@ paths:
       tags:
         - users
       summary: Авторизация пользователя
-      description: Авторизует пользователя на основе логина и пароля. В случае успешного запроса сервер вернёт токен, по которому в дальнейшем происходит авторизация. Этот токен необходимо передавать через заголовок X-Token.
+      description: "Авторизует пользователя на основе логина и пароля. В случае успешного запроса сервер вернёт токен, по которому в дальнейшем происходит авторизация. Этот токен необходимо передавать через заголовок 'Authorization: Bearer ################'"
 
       requestBody:
-        description: Аторизационные данные&#58; логин и пароль
+        description: "Аторизационные данные: логин и пароль"
         content:
           application/json:
             schema:
@@ -377,24 +377,18 @@ paths:
 
       responses:
         "200":
-          description: Авторизация пройдена успешно. Возвращается объект пользователя и X-Token.
-          headers:
-            X-Token:
-              schema:
-                type: string
-              description: Токен авторизации. Передавать в закрытые части приложения.
-              example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+          description: Авторизация пройдена успешно. Возвращается объект пользователя и token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/userWithToken'
 
-        "400":
-          description: Невалидные данные.
+        "401":
+          description: Неверные данные авторизации.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/invalidData'
+                $ref: '#/components/schemas/invalidAuthData'
 
     get:
       tags:
@@ -904,6 +898,34 @@ components:
           type: string
           example: Pro
 
+    userWithToken:
+      type: object
+
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJhdmF0YXIiOiJkZWZhdWx0LWF2YXRhci5qcGciLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMTQ3MCwiZXhwIjoxNjc3MTc0MjcwfQ.TFSZbJidaaU_OI37fr0Pph5Io5nTo7Mhc4J1H3TVFRs
+
+        id:
+          type: string
+          example: 5c3zjtpxeclquo2p2zlu91ic
+
+        username:
+          type: string
+          example: Caroline McCormick
+
+        email:
+          type: string
+          example: caroline_mccormick@gmail.com
+
+        avatar:
+          type: string
+          example: http://localhost:7777/static/default-avatar.jpg
+
+        userStatus:
+          type: string
+          example: Pro
+
     invalidData:
       type: object
 
@@ -939,6 +961,22 @@ components:
         message:
           type: string
           example: User with email «newuser@gmail.com» exists.
+
+        details:
+          type: array
+          example: []
+
+    invalidAuthData:
+      type: object
+
+      properties:
+        errorType:
+          type: string
+          example: COMMON_ERROR
+
+        message:
+          type: string
+          example: Invalid authorization data
 
         details:
           type: array

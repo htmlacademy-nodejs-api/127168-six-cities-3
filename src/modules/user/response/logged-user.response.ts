@@ -5,6 +5,9 @@ export default class LoggedUserResponse {
   public token!: string;
 
   @Expose()
+  public id!: string;
+
+  @Expose()
   public username!: string;
 
   @Expose()

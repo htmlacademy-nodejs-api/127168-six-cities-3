@@ -83,7 +83,7 @@ export default class UserController extends Controller {
     if (!user) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
-        'Unauthorized',
+        'Invalid authorization data',
         'UserController'
       );
     }
@@ -91,7 +91,13 @@ export default class UserController extends Controller {
     const token = await createJWT(
       JWT_ALGORITM,
       this.configService.get('JWT_SECRET'),
-      {id: user.id, email: user.email}
+      {
+        id: user.id,
+        username: user.username,
+        avatar: user.avatar,
+        email: user.email,
+        userStatus: user.userStatus
+      }
     );
 
     this.ok(res, {...fillDTO(LoggedUserResponse, user), token});
