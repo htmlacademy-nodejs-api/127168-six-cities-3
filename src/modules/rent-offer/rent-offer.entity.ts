@@ -64,7 +64,7 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
   })
   public rating!: number;
 
-  @prop({required: true})
+  @prop({default: ''})
   public preview!: string;
 
   @prop({required: true})

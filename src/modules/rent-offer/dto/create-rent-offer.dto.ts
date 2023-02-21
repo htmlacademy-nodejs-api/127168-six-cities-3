@@ -28,9 +28,6 @@ export default class CreateRentOfferDTO {
   @Max(100000, {message: 'Maximum price is 100000'})
   public price!: number;
 
-  @IsString({message: 'preview must be string'})
-  public preview!: string;
-
   @IsArray({message: 'Field photos must be an array'})
   @ArrayMinSize(6, {message: 'Array "photos" must have only 6 elements'})
   @ArrayMaxSize(6, {message: 'Array "photos" must have only 6 elements'})

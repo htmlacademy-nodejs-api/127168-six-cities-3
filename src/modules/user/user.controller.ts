@@ -14,6 +14,7 @@ import { createJWT, fillDTO } from '../../utils/common.js';
 import CreateUserDTO from './dto/create-user.dto.js';
 import LoginUserDTO from './dto/login-user.dto.js';
 import LoggedUserResponse from './response/logged-user.response.js';
+import UploadUserAvatarResponse from './response/upload-user-avatar.response.js';
 import UserResponse from './response/user.response.js';
 import { UserServiceInterface } from './user-service.interface.js';
 import { JWT_ALGORITM } from './user.constant.js';
@@ -110,8 +111,9 @@ export default class UserController extends Controller {
   }
 
   public async uploadAvatar(req: Request, res: Response) {
-    this.created(res, {
-      filepath: req.file?.path
-    });
+    const {userId} = req.params;
+    const uploadedFile = {avatar: req.file?.filename};
+    await this.userService.updateById(userId, uploadedFile);
+    this.created(res, fillDTO(UploadUserAvatarResponse, uploadedFile));
   }
 }

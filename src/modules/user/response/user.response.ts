@@ -3,6 +3,9 @@ import { UserStatus } from '../../../types/user-status.enum.js';
 
 export default class UserResponse {
   @Expose()
+  public id!: string;
+
+  @Expose()
   public username!: string;
 
   @Expose()

@@ -18,6 +18,8 @@ import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.mid
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { PrivateRouteMiddleware } from '../../common/middlewares/private-route.middleware.js';
 import { ConfigInterface } from '../../common/config/config.interface.js';
+import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
+import UploadPreviewResponse from './response/upload-preview.response.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -77,6 +79,16 @@ export default class RentOfferController extends Controller {
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
+      ]
+    });
+    this.addRoute({
+      path: '/:offerId/preview',
+      method: HttpMethod.Post,
+      handler: this.uploadPreview,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image'),
       ]
     });
   }
@@ -139,5 +151,12 @@ export default class RentOfferController extends Controller {
     const deletedOffer = await this.rentOfferService.deleteById(offerId);
     await this.commentService.deleteByOfferId(offerId);
     this.noContent(res, deletedOffer);
+  }
+
+  public async uploadPreview(req: Request<core.ParamsDictionary | ParamsGetOffer>, res: Response) {
+    const {offerId} = req.params;
+    const updateDTO = { preview: req.file?.filename };
+    await this.rentOfferService.updateById(offerId, updateDTO);
+    this.created(res, fillDTO(UploadPreviewResponse, updateDTO));
   }
 }
