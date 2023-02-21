@@ -355,6 +355,10 @@ paths:
 
         "409":
           description: Пользователь с таким email уже существует.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/conflictData'
 
   /users/login:
     post:
@@ -868,23 +872,19 @@ components:
           type: string
           example: caroline_mccormick@gmail.com
 
-        avatar:
-          type: string
-          example: avatar-image.jpg
-
         password:
           type: string
           example: qwerty12345
 
         userStatus:
           type: string
-          example: Standart
+          example: Pro
 
     user:
       type: object
 
       properties:
-        userId:
+        id:
           type: string
           example: 5c3zjtpxeclquo2p2zlu91ic
 
@@ -898,19 +898,51 @@ components:
 
         avatar:
           type: string
-          example: avatar-image.jpg
+          example: http://localhost:7777/static/default-avatar.jpg
 
         userStatus:
           type: string
-          example: Standart
+          example: Pro
 
     invalidData:
       type: object
 
       properties:
-        error:
+        errorType:
           type: string
-          example: Невалидные данные. Проверьте заполненные поля
+          example: VALIDATION_ERROR
+
+        message:
+          type: string
+          example: Validation error /register
+
+        details:
+          type: array
+          example: [
+            {
+              property: "userStatus",
+              value: "Pr",
+              messages: [
+              "type must be Standart or Pro"
+              ]
+            }
+          ]
+
+    conflictData:
+      type: object
+
+      properties:
+        errorType:
+          type: string
+          example: COMMON_ERROR
+
+        message:
+          type: string
+          example: User with email «newuser@gmail.com» exists.
+
+        details:
+          type: array
+          example: []
 
     unauthorizedUser:
       type: object
