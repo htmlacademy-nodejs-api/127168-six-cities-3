@@ -426,26 +426,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/unauthorizedUser'
 
-  /users/logout:
-    delete:
-      tags:
-        - users
-      summary: Завершение работы пользователя
-      description: Завершает сеанс работы — выход из авторизации.
-      parameters:
-        - in: header
-          name: X-Token
-          schema:
-            type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
-          description: Токен авторизации
-          required:
-            true
-
-      responses:
-        "204":
-          description: Сеанс завершён.
-
   /favorites:
     get:
       tags:
