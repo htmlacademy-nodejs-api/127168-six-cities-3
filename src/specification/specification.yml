@@ -420,6 +420,69 @@ paths:
               schema:
                 $ref: '#/components/schemas/unauthorizedUser'
 
+  /users/{usedId}/avatar:
+    post:
+      tags:
+        - users
+      summary: Загрузка аватара пользователя
+      description: Возвращает путь к аватарке
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор пользователя
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
+          description: Токен авторизации
+          required:
+            true
+
+      requestBody:
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+          image/png:
+            schema:
+              type: string
+              format: binary
+
+      responses:
+        "201":
+          description: Аватар загружен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/avatar'
+
+        "400":
+          description: Идентификатор написан неверно.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidObjectID'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
+
+        "404":
+          description: Пользователь userId не обнаружен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundData'
+
   /favorites:
     get:
       tags:
@@ -984,6 +1047,38 @@ components:
       type: object
 
       properties:
-        error:
+        errorType:
           type: string
-          example: Ресурс не обнаружен. Проверьте введённые данные
+          example: COMMON_ERROR
+
+        message:
+          type: string
+          example: Not found.
+
+        details:
+          type: array
+          example: []
+
+    invalidObjectID:
+      type: object
+
+      properties:
+        errorType:
+          type: string
+          example: COMMON_ERROR
+
+        message:
+          type: string
+          example: 63f5157ddc0686876db63d3 is invalid ObjectID.
+
+        details:
+          type: array
+          example: []
+
+    avatar:
+      type: object
+
+      properties:
+        avatar:
+          type: string
+          example: "http://localhost:7777/upload/4aAI2gz4-9HuQvRiWXFIm.jpeg"

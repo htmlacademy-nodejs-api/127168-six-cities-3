@@ -10,4 +10,5 @@ export interface UserServiceInterface {
   findByEmail(email: string): Promise<DocumentType<UserEntity> | null>;
   findOrCreate(dto: CreateUserDTO, salt: string): Promise<DocumentType<UserEntity>>;
   verifyUser(dto: LoginUserDTO, salt: string): Promise<DocumentType<UserEntity> | null>;
+  exists(documentId: string): Promise<boolean>;
 }
