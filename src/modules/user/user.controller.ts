@@ -5,6 +5,7 @@ import { ConfigInterface } from '../../common/config/config.interface.js';
 import { Controller } from '../../common/controller/controller.js';
 import HttpError from '../../common/errors/http-error.js';
 import { LoggerInterface } from '../../common/logger/logger.interface.js';
+import { PrivateRouteMiddleware } from '../../common/middlewares/private-route.middleware.js';
 import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-objectid.middleware.js';
@@ -35,8 +36,17 @@ export default class UserController extends Controller {
       handler: this.create,
       middlewares: [new ValidateDtoMiddleware(CreateUserDTO)]
     });
-    this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
-    this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.checkAuth});
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Post,
+      handler: this.login
+    });
+    this.addRoute({
+      path: '/login',
+      method: HttpMethod.Get,
+      handler: this.checkAuth,
+      middlewares: [new PrivateRouteMiddleware()]
+    });
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
@@ -94,7 +104,6 @@ export default class UserController extends Controller {
       {
         id: user.id,
         username: user.username,
-        avatar: user.avatar,
         email: user.email,
         userStatus: user.userStatus
       }
@@ -104,14 +113,6 @@ export default class UserController extends Controller {
   }
 
   public async checkAuth(req: Request, res: Response) {
-    if (!req.user) {
-      throw new HttpError(
-        StatusCodes.UNAUTHORIZED,
-        'Unauthorized',
-        'UserController'
-      );
-    }
-
     const user = await this.userService.findByEmail(req.user.email);
     this.ok(res, fillDTO(LoggedUserResponse, user));
   }

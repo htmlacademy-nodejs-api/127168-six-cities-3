@@ -397,10 +397,10 @@ paths:
       description: Возвращает информацию по авторизованному пользователю
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
@@ -408,12 +408,6 @@ paths:
       responses:
         "200":
           description: Проверка авторизации пройдена успешно.
-          headers:
-            X-Token:
-              schema:
-                type: string
-              description: Токен авторизации. Передавать в закрытые части приложения.
-              example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
           content:
             application/json:
               schema:
@@ -966,9 +960,17 @@ components:
       type: object
 
       properties:
-        error:
+        errorType:
           type: string
-          example: Пользователь не авторизован.
+          example: COMMON_ERROR
+
+        message:
+          type: string
+          example: User not authorized.
+
+        details:
+          type: array
+          example: []
 
     forbiddenResponse:
       type: object
