@@ -36,7 +36,6 @@ export default class UserController extends Controller {
     });
     this.addRoute({path: '/login', method: HttpMethod.Post, handler: this.login});
     this.addRoute({path: '/login', method: HttpMethod.Get, handler: this.checkAuth});
-    this.addRoute({path: '/logout', method: HttpMethod.Delete, handler: this.logout});
     this.addRoute({
       path: '/:userId/avatar',
       method: HttpMethod.Post,
@@ -94,20 +93,20 @@ export default class UserController extends Controller {
       {id: user.id, email: user.email}
     );
 
-    this.ok(res, fillDTO(LoggedUserResponse, {email: user.email, token}));
+    this.ok(res, {...fillDTO(LoggedUserResponse, user), token});
   }
 
   public async checkAuth(req: Request, res: Response) {
-    const user = await this.userService.findByEmail(req.user.email);
-    this.ok(res, fillDTO(UserResponse, user));
-  }
+    if (!req.user) {
+      throw new HttpError(
+        StatusCodes.UNAUTHORIZED,
+        'Unauthorized',
+        'UserController'
+      );
+    }
 
-  public async logout(_req: Request, _res: Response) {
-    throw new HttpError(
-      StatusCodes.NOT_IMPLEMENTED,
-      'Not implemented',
-      'UserController',
-    );
+    const user = await this.userService.findByEmail(req.user.email);
+    this.ok(res, fillDTO(LoggedUserResponse, user));
   }
 
   public async uploadAvatar(req: Request, res: Response) {
