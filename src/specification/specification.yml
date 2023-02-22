@@ -150,10 +150,10 @@ paths:
       description: Возвращает отредактированное предложение по аренде с идентификатором offerId.
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
@@ -166,7 +166,7 @@ paths:
           description: Идентификатор предложения по аренде
 
       requestBody:
-        description: Данные по редактируемому предложению.
+        description: Данные по редактируемому предложению. При передаче новых данных можно указать только те поля, которые нужно изменить, опуская поля без изменения
         content:
           application/json:
             schema:
@@ -194,13 +194,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/unauthorizedUser'
-
-        "403":
-          description: Редактирование запрещено.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/forbiddenResponse'
 
         "404":
           description: Предложение offerId не обнаружено
@@ -778,14 +771,6 @@ components:
           type: string
           example: The WonderINN Mirrored Glass Cabin
 
-        description:
-          type: string
-          example: Immerse yourself in the wilderness, still within reach of civilization! WonderINN is literally a hidden gem; the unique design of the mirrored glass blends into the landscape so you can retreat to comfort and luxury as you watch the world pass by.
-
-        city:
-          type: string
-          example: Cologne
-
         propertyType:
           type: string
           example: Room
@@ -794,44 +779,10 @@ components:
           type: number
           example: 2026
 
-        preview:
-          type: string
-          example: preview002.jpg
-
-        photos:
-          type: array
-          items:
-            type: string
-          example: [
-            photo002-000.jpg,
-            photo002-001.jpg,
-            photo002-002.jpg,
-            photo002-003.jpg,
-            photo002-004.jpg,
-            photo002-005.jpg
-          ]
-
-        numRooms:
-          type: number
-          example: 4
-
         numGuests:
           type: number
           example: 5
 
-        amenities:
-          type: array
-          items:
-            type: string
-          example: [Baby seat, Towels, Washer]
-
-        premium:
-          type: boolean
-          example: false
-
-        favorite:
-          type: boolean
-          example: true
 
     newComment:
       type: object
@@ -1020,14 +971,6 @@ components:
         details:
           type: array
           example: []
-
-    forbiddenResponse:
-      type: object
-
-      properties:
-        error:
-          type: string
-          example: Доступ запрещён.
 
     notFoundData:
       type: object
