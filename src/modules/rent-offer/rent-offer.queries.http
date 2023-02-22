@@ -63,8 +63,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjYwZTg1ZTgzNzgxYjc4MDAyN
 
 ## Удалить объявление по id
 
-DELETE http://localhost:7777/rent-offers/63dd55d16535a4d5b29c0701 HTTP/1.1
+DELETE http://localhost:7777/rent-offers/63f5f8de0f739ed224f783ac HTTP/1.1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjVlOTY5YzYxYzc0NGM0YzVlOGE5NSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzA2MDQ2NCwiZXhwIjoxNjc3MjMzMjY0fQ.oRSSDCAJmU6uqfrDMU8__S66IHQeg9w7mz4d3NDMqt8
 
 ###
 

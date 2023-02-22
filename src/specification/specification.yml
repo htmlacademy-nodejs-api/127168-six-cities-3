@@ -222,10 +222,10 @@ paths:
       description: Удаляет предложение по аренде, созданное конкретным пользователем.
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
@@ -240,6 +240,27 @@ paths:
       responses:
         "204":
           description: Предложение по аренде удалено
+
+        "400":
+          description: Невалидные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidObjectID'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
+
+        "403":
+          description: Доступ запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/forbiddenResponse'
 
         "404":
           description: Предложение offerId не обнаружено
