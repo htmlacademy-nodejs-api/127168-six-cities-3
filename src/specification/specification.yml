@@ -26,11 +26,10 @@ paths:
       description: Возвращает список преложений по аренде в виде массива объектов. По умолчанию возвращает 60 предложений по аренде. Возможно запросить больше предложений, указав в запросе необходимое количество предложений по аренде.
       parameters:
         - in: query
-          name: count
+          name: limit
           schema:
             type: integer
-            minimum: 60
-            example: 100
+            example: 10
           description: Требуемое количество предложений
           required: false
 
@@ -55,10 +54,10 @@ paths:
       description: Возвращает новое предложение по аренде с идентификатором offerId.
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
@@ -136,6 +135,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/rentOfferFull'
 
+        "400":
+          description: Идентификатор написан неверно.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidObjectID'
+
         "404":
           description: Предложение offerId не обнаружено
           content:
@@ -150,10 +156,10 @@ paths:
       description: Возвращает отредактированное предложение по аренде с идентификатором offerId.
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
@@ -166,7 +172,7 @@ paths:
           description: Идентификатор предложения по аренде
 
       requestBody:
-        description: Данные по редактируемому предложению.
+        description: Данные по редактируемому предложению. При передаче новых данных можно указать только те поля, которые нужно изменить, опуская поля без изменения
         content:
           application/json:
             schema:
@@ -196,7 +202,7 @@ paths:
                 $ref: '#/components/schemas/unauthorizedUser'
 
         "403":
-          description: Редактирование запрещено.
+          description: Доступ запрещён.
           content:
             application/json:
               schema:
@@ -216,10 +222,10 @@ paths:
       description: Удаляет предложение по аренде, созданное конкретным пользователем.
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
@@ -235,6 +241,27 @@ paths:
         "204":
           description: Предложение по аренде удалено
 
+        "400":
+          description: Невалидные данные.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidObjectID'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
+
+        "403":
+          description: Доступ запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/forbiddenResponse'
+
         "404":
           description: Предложение offerId не обнаружено
           content:
@@ -246,8 +273,8 @@ paths:
     get:
       tags:
         - comments
-      summary: Получение списка комментариев к предложению
-      description: Возвращает список комментариев для предложения с идентификатором offerId.
+      summary: Получение списка комментариев к предложению.
+      description: Возвращает список комментариев для предложения с идентификатором offerId. Стандартно возвращает 50 комментариев. Можно выбрать количество вручную с помощью запроса limit
       parameters:
         - in: path
           name: offerId
@@ -256,6 +283,13 @@ paths:
             type: string
             example: 63c95f619aec98932211d596
           description: Идентификатор объявления
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            example: 10
+          description: Требуемое количество комментариев
+          required: false
 
       responses:
         "200":
@@ -270,6 +304,13 @@ paths:
                     - $ref: '#/components/schemas/commentData'
                     - type: object
 
+        "400":
+          description: Идентификатор написан неверно.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidObjectID'
+
         "404":
           description: Предложение offerId не обнаружено
           content:
@@ -277,7 +318,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/notFoundData'
 
-  /comments:
     post:
       tags:
         - comments
@@ -285,13 +325,20 @@ paths:
       description: Добавляет новый комментарий для предложения с идентификатором offerId.
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор объявления
 
       requestBody:
         description: Данные по новому комментарию.
@@ -355,16 +402,20 @@ paths:
 
         "409":
           description: Пользователь с таким email уже существует.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/conflictData'
 
   /users/login:
     post:
       tags:
         - users
       summary: Авторизация пользователя
-      description: Авторизует пользователя на основе логина и пароля. В случае успешного запроса сервер вернёт токен, по которому в дальнейшем происходит авторизация. Этот токен необходимо передавать через заголовок X-Token.
+      description: "Авторизует пользователя на основе логина и пароля. В случае успешного запроса сервер вернёт токен, по которому в дальнейшем происходит авторизация. Этот токен необходимо передавать через заголовок 'Authorization: Bearer ################'"
 
       requestBody:
-        description: Аторизационные данные&#58; логин и пароль
+        description: "Аторизационные данные: логин и пароль"
         content:
           application/json:
             schema:
@@ -373,24 +424,18 @@ paths:
 
       responses:
         "200":
-          description: Авторизация пройдена успешно. Возвращается объект пользователя и X-Token.
-          headers:
-            X-Token:
-              schema:
-                type: string
-              description: Токен авторизации. Передавать в закрытые части приложения.
-              example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
+          description: Авторизация пройдена успешно. Возвращается объект пользователя и token.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/user'
+                $ref: '#/components/schemas/userWithToken'
 
-        "400":
-          description: Невалидные данные.
+        "401":
+          description: Неверные данные авторизации.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/invalidData'
+                $ref: '#/components/schemas/invalidAuthData'
 
     get:
       tags:
@@ -399,10 +444,10 @@ paths:
       description: Возвращает информацию по авторизованному пользователю
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
@@ -410,12 +455,6 @@ paths:
       responses:
         "200":
           description: Проверка авторизации пройдена успешно.
-          headers:
-            X-Token:
-              schema:
-                type: string
-              description: Токен авторизации. Передавать в закрытые части приложения.
-              example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20=
           content:
             application/json:
               schema:
@@ -428,25 +467,68 @@ paths:
               schema:
                 $ref: '#/components/schemas/unauthorizedUser'
 
-  /users/logout:
-    delete:
+  /users/{usedId}/avatar:
+    post:
       tags:
         - users
-      summary: Завершение работы пользователя
-      description: Завершает сеанс работы — выход из авторизации.
+      summary: Загрузка аватара пользователя
+      description: Возвращает путь к аватарке
       parameters:
-        - in: header
-          name: X-Token
+        - in: path
+          name: userId
+          required: true
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: 63c95f619aec98932211d596
+          description: Идентификатор пользователя
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
 
+      requestBody:
+        content:
+          image/jpeg:
+            schema:
+              type: string
+              format: binary
+          image/png:
+            schema:
+              type: string
+              format: binary
+
       responses:
-        "204":
-          description: Сеанс завершён.
+        "201":
+          description: Аватар загружен.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/avatar'
+
+        "400":
+          description: Идентификатор написан неверно.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidObjectID'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
+
+        "404":
+          description: Пользователь userId не обнаружен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundData'
 
   /favorites:
     get:
@@ -484,18 +566,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/unauthorizedUser'
 
-  /favorites/{offerId}/{status}:
-    patch:
+  /favorites/{offerId}:
+    post:
       tags:
         - favorites
-      summary: Изменение статуса избранного объявления
-      description: Добавление или удаление предложения в/из избранного. Возвращает предложение с идентификатором offerId с актуальным состоянием поля isFavorite
+      summary: Добавление объявления в избранное
+      description: Добавить в избранное
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
@@ -506,24 +588,71 @@ paths:
             type: string
             example: 63c95f619aec98932211d596
           description: Идентификатор предложения по аренде
-        - in: path
-          name: status
-          required: true
-          schema:
-            type: number
-            example: 1
-          description: Статус избранного предложения по аренде. 1 - добавить в избранное, 0 - удалить из избранного
 
       responses:
         "200":
-          description: Предложение по аренде отредактированно. Объект предложения
+          description: Предложение об аренде добавлено в избранное
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/rentOfferFull'
 
         "400":
-          description: Невалидные данные.
+          description: Опечатка в offerId.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidData'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
+
+        "404":
+          description: Предложение offerId не обнаружено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundData'
+
+        "409":
+          description: Предложение уже добавлено в избранное
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/conflictData'
+
+    delete:
+      tags:
+        - favorites
+      summary: Удаление объявления из избранного
+      description: Удалить из избранного
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
+          description: Токен авторизации
+          required:
+            true
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор предложения по аренде
+
+      responses:
+        "204":
+          description: Предложение об аренде удалено из избранного
+
+        "400":
+          description: Опечатка в offerId.
           content:
             application/json:
               schema:
@@ -706,23 +835,6 @@ components:
           type: number
           example: 2026
 
-        preview:
-          type: string
-          example: preview002.jpg
-
-        photos:
-          type: array
-          items:
-            type: string
-          example: [
-            photo002-000.jpg,
-            photo002-001.jpg,
-            photo002-002.jpg,
-            photo002-003.jpg,
-            photo002-004.jpg,
-            photo002-005.jpg
-          ]
-
         numRooms:
           type: number
           example: 4
@@ -740,10 +852,6 @@ components:
         premium:
           type: boolean
           example: false
-
-        favorite:
-          type: boolean
-          example: true
 
     modifiedRentOffer:
       type: object
@@ -757,14 +865,6 @@ components:
           type: string
           example: The WonderINN Mirrored Glass Cabin
 
-        description:
-          type: string
-          example: Immerse yourself in the wilderness, still within reach of civilization! WonderINN is literally a hidden gem; the unique design of the mirrored glass blends into the landscape so you can retreat to comfort and luxury as you watch the world pass by.
-
-        city:
-          type: string
-          example: Cologne
-
         propertyType:
           type: string
           example: Room
@@ -773,44 +873,9 @@ components:
           type: number
           example: 2026
 
-        preview:
-          type: string
-          example: preview002.jpg
-
-        photos:
-          type: array
-          items:
-            type: string
-          example: [
-            photo002-000.jpg,
-            photo002-001.jpg,
-            photo002-002.jpg,
-            photo002-003.jpg,
-            photo002-004.jpg,
-            photo002-005.jpg
-          ]
-
-        numRooms:
-          type: number
-          example: 4
-
         numGuests:
           type: number
           example: 5
-
-        amenities:
-          type: array
-          items:
-            type: string
-          example: [Baby seat, Towels, Washer]
-
-        premium:
-          type: boolean
-          example: false
-
-        favorite:
-          type: boolean
-          example: true
 
     newComment:
       type: object
@@ -868,23 +933,19 @@ components:
           type: string
           example: caroline_mccormick@gmail.com
 
-        avatar:
-          type: string
-          example: avatar-image.jpg
-
         password:
           type: string
           example: qwerty12345
 
         userStatus:
           type: string
-          example: Standart
+          example: Pro
 
     user:
       type: object
 
       properties:
-        userId:
+        id:
           type: string
           example: 5c3zjtpxeclquo2p2zlu91ic
 
@@ -898,40 +959,164 @@ components:
 
         avatar:
           type: string
-          example: avatar-image.jpg
+          example: http://localhost:7777/static/default-avatar.jpg
 
         userStatus:
           type: string
-          example: Standart
+          example: Pro
+
+    userWithToken:
+      type: object
+
+      properties:
+        token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJhdmF0YXIiOiJkZWZhdWx0LWF2YXRhci5qcGciLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMTQ3MCwiZXhwIjoxNjc3MTc0MjcwfQ.TFSZbJidaaU_OI37fr0Pph5Io5nTo7Mhc4J1H3TVFRs
+
+        id:
+          type: string
+          example: 5c3zjtpxeclquo2p2zlu91ic
+
+        username:
+          type: string
+          example: Caroline McCormick
+
+        email:
+          type: string
+          example: caroline_mccormick@gmail.com
+
+        avatar:
+          type: string
+          example: http://localhost:7777/static/default-avatar.jpg
+
+        userStatus:
+          type: string
+          example: Pro
 
     invalidData:
       type: object
 
       properties:
-        error:
+        errorType:
           type: string
-          example: Невалидные данные. Проверьте заполненные поля
+          example: VALIDATION_ERROR
+
+        message:
+          type: string
+          example: Validation error
+
+        details:
+          type: array
+          example: [
+            {
+              property: "poperty",
+              value: "some poperty value",
+              messages: [
+              "value must be valid"
+              ]
+            }
+          ]
+
+    conflictData:
+      type: object
+
+      properties:
+        errorType:
+          type: string
+          example: COMMON_ERROR
+
+        message:
+          type: string
+          example: Document exists.
+
+        details:
+          type: array
+          example: []
+
+    invalidAuthData:
+      type: object
+
+      properties:
+        errorType:
+          type: string
+          example: COMMON_ERROR
+
+        message:
+          type: string
+          example: Invalid authorization data
+
+        details:
+          type: array
+          example: []
 
     unauthorizedUser:
       type: object
 
       properties:
-        error:
+        errorType:
           type: string
-          example: Пользователь не авторизован.
+          example: COMMON_ERROR
 
-    forbiddenResponse:
-      type: object
-
-      properties:
-        error:
+        message:
           type: string
-          example: Доступ запрещён.
+          example: User not authorized.
+
+        details:
+          type: array
+          example: []
 
     notFoundData:
       type: object
 
       properties:
-        error:
+        errorType:
           type: string
-          example: Ресурс не обнаружен. Проверьте введённые данные
+          example: COMMON_ERROR
+
+        message:
+          type: string
+          example: Not found.
+
+        details:
+          type: array
+          example: []
+
+    forbiddenResponse:
+      type: object
+
+      properties:
+        errorType:
+          type: string
+          example: COMMON_ERROR
+
+        message:
+          type: string
+          example: User newuser@gmail.com cannot edit offer 63f5f8de0f739ed224f783ac
+
+        details:
+          type: array
+          example: []
+
+    invalidObjectID:
+      type: object
+
+      properties:
+        errorType:
+          type: string
+          example: COMMON_ERROR
+
+        message:
+          type: string
+          example: 63f5157ddc0686876db63d3 is invalid ObjectID.
+
+        details:
+          type: array
+          example: []
+
+    avatar:
+      type: object
+
+      properties:
+        avatar:
+          type: string
+          example: "http://localhost:7777/upload/4aAI2gz4-9HuQvRiWXFIm.jpeg"

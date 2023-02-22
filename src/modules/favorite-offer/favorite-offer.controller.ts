@@ -12,6 +12,7 @@ import { PrivateRouteMiddleware } from '../../common/middlewares/private-route.m
 import { FavoriteOfferServiceInterface } from './favorite-offer-service.interface.js';
 import HttpError from '../../common/errors/http-error.js';
 import { StatusCodes } from 'http-status-codes';
+import { ConfigInterface } from '../../common/config/config.interface.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -21,10 +22,11 @@ type ParamsGetOffer = {
 export default class FavoriteOfferController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) configService: ConfigInterface,
     @inject(Component.FavoriteOfferServiceInterface) private readonly favoriteOfferService: FavoriteOfferServiceInterface,
     @inject(Component.RentOfferServiceInterface) private readonly rentOfferService: RentOfferServiceInterface,
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Register routes for FavoriteOfferController');
 

@@ -8,7 +8,7 @@ export class PrivateRouteMiddleware implements MiddlewareInterface {
     if (!req.user) {
       throw new HttpError(
         StatusCodes.UNAUTHORIZED,
-        'Unauthorized',
+        'User not authorized',
         'PrivateRouteMiddleware'
       );
     }

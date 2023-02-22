@@ -64,10 +64,10 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
   })
   public rating!: number;
 
-  @prop({required: true})
+  @prop({default: ''})
   public preview!: string;
 
-  @prop({required: true})
+  @prop({default: []})
   public photos!: string[];
 
   @prop({
@@ -86,9 +86,6 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
 
   @prop({required: true})
   public amenities!: string[];
-
-  @prop({required: true})
-  public postDate!: Date;
 
   @prop({required: true})
   public premium!: boolean;

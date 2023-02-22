@@ -17,6 +17,11 @@ import { ValidateObjectIdMiddleware } from '../../common/middlewares/validate-ob
 import { ValidateDtoMiddleware } from '../../common/middlewares/validate-dto.middleware.js';
 import { DocumentExistsMiddleware } from '../../common/middlewares/document-exists.middleware.js';
 import { PrivateRouteMiddleware } from '../../common/middlewares/private-route.middleware.js';
+import { ConfigInterface } from '../../common/config/config.interface.js';
+import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
+import UploadPreviewResponse from './response/upload-preview.response.js';
+import { CityCoordinates } from '../../common/rent-offer-generator/rent-offer-generator.const.js';
+import { CheckOfferAndUserMiddleware } from '../../common/middlewares/check-offer-and-user.middleware.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -26,10 +31,11 @@ type ParamsGetOffer = {
 export default class RentOfferController extends Controller {
   constructor(
     @inject(Component.LoggerInterface) logger: LoggerInterface,
+    @inject(Component.ConfigInterface) configService: ConfigInterface,
     @inject(Component.RentOfferServiceInterface) private readonly rentOfferService: RentOfferServiceInterface,
     @inject(Component.CommentServiceInterface) private readonly commentService: CommentServiceInterface,
   ) {
-    super(logger);
+    super(logger, configService);
 
     this.logger.info('Register routes for RentOfferController');
 
@@ -65,7 +71,8 @@ export default class RentOfferController extends Controller {
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(UpdateRentOfferDTO),
-        new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
+        new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId'),
+        new CheckOfferAndUserMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
       ]});
     this.addRoute({
       path: '/:offerId',
@@ -74,7 +81,19 @@ export default class RentOfferController extends Controller {
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
+        new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId'),
+        new CheckOfferAndUserMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
+      ]
+    });
+    this.addRoute({
+      path: '/:offerId/preview',
+      method: HttpMethod.Post,
+      handler: this.uploadPreview,
+      middlewares: [
+        new PrivateRouteMiddleware(),
+        new ValidateObjectIdMiddleware('offerId'),
+        new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image'),
+        new CheckOfferAndUserMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
       ]
     });
   }
@@ -94,9 +113,13 @@ export default class RentOfferController extends Controller {
     res: Response
   ): Promise<void> {
     const {body, user} = req;
-    const newOffer = await this.rentOfferService.create({...body, userId: user.id});
-    const newOfferResponse = fillDTO(RentOfferFullResponse, newOffer);
-    this.created(res, newOfferResponse);
+    const newOffer = await this.rentOfferService.create(
+      {
+        ...body,
+        coordinates: CityCoordinates[body.city] as [number, number],
+        userId: user.id
+      });
+    this.created(res, fillDTO(RentOfferFullResponse, newOffer));
   }
 
   public async findPremium(
@@ -114,19 +137,16 @@ export default class RentOfferController extends Controller {
   ): Promise<void> {
     const offerId = req.params.offerId;
     const offer = await this.rentOfferService.findById(offerId);
-    const offerResponse = fillDTO(RentOfferFullResponse, offer);
-    this.ok(res, offerResponse);
+    this.ok(res, fillDTO(RentOfferFullResponse, offer));
   }
 
   public async update(
     req: Request<core.ParamsDictionary | ParamsGetOffer, Record<string, unknown>, UpdateRentOfferDTO>,
     res: Response
   ): Promise<void> {
-    const {body} = req;
-    const offerId = req.params.offerId;
-    const updatedOffer = await this.rentOfferService.updateById(offerId, body);
-    const updatedOfferResponse = fillDTO(RentOfferFullResponse, updatedOffer);
-    this.ok(res, updatedOfferResponse);
+    const {body, params} = req;
+    const updatedOffer = await this.rentOfferService.updateById(params.offerId, body);
+    this.ok(res, fillDTO(RentOfferFullResponse, updatedOffer));
   }
 
   public async delete(
@@ -137,5 +157,12 @@ export default class RentOfferController extends Controller {
     const deletedOffer = await this.rentOfferService.deleteById(offerId);
     await this.commentService.deleteByOfferId(offerId);
     this.noContent(res, deletedOffer);
+  }
+
+  public async uploadPreview(req: Request<core.ParamsDictionary | ParamsGetOffer>, res: Response) {
+    const {offerId} = req.params;
+    const updateDTO = { preview: req.file?.filename };
+    await this.rentOfferService.updateById(offerId, updateDTO);
+    this.created(res, fillDTO(UploadPreviewResponse, updateDTO));
   }
 }

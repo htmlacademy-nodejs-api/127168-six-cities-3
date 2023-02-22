@@ -9,7 +9,7 @@ export default class CreateCommentDTO {
   @Max(5, {message: 'Maximum rating is 5'})
   public rating!: number;
 
-  public offerId!: string;
-
   public userId!: string;
+
+  public offerId!: string;
 }

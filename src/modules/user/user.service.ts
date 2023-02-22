@@ -7,6 +7,8 @@ import { types } from '@typegoose/typegoose';
 import {UserEntity} from './user.entity.js';
 import {UserServiceInterface} from './user-service.interface.js';
 import LoginUserDTO from './dto/login-user.dto.js';
+import { DEFAULT_AVATAR_FILE_NAME } from './user.constant.js';
+import UpdateUserDTO from './dto/update-user.dto.js';
 
 @injectable()
 export default class UserService implements UserServiceInterface {
@@ -16,13 +18,19 @@ export default class UserService implements UserServiceInterface {
   ) {}
 
   public async create(dto: CreateUserDTO, salt: string): Promise<DocumentType<UserEntity>> {
-    const user = new UserEntity(dto);
+    const user = new UserEntity({...dto, avatar: DEFAULT_AVATAR_FILE_NAME});
     user.setPassword(dto.password, salt);
 
     const result = await this.userModel.create(user);
     this.logger.info(`New user created: ${user.email}`);
 
     return result;
+  }
+
+  public async updateById(userId: string, dto: UpdateUserDTO): Promise<DocumentType<UserEntity> | null> {
+    return this.userModel
+      .findByIdAndUpdate(userId, dto, {new: true})
+      .exec();
   }
 
   public async findByEmail(email: string): Promise<DocumentType<UserEntity> | null> {
@@ -51,5 +59,10 @@ export default class UserService implements UserServiceInterface {
     }
 
     return null;
+  }
+
+  public async exists(documentId: string): Promise<boolean> {
+    return (await this.userModel
+      .exists({_id: documentId})) !== null;
   }
 }

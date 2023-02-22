@@ -1,4 +1,4 @@
-import { ArrayMaxSize, ArrayMinSize, IsArray, IsBoolean, IsEnum, IsNumber, IsString, Max, MaxLength, Min, MinLength } from 'class-validator';
+import { IsArray, IsBoolean, IsEnum, Max, MaxLength, Min, MinLength } from 'class-validator';
 import { Amenities } from '../../../types/amenities.enum.js';
 import { City } from '../../../types/city.enum.js';
 import { PropertyType } from '../../../types/property-type.enum.js';
@@ -15,11 +15,7 @@ export default class CreateRentOfferDTO {
   @IsEnum(City, {message: 'City must be one of the six represented'})
   public city!: City;
 
-  @IsArray({message: 'Field coordinates must be an array'})
-  @ArrayMinSize(2, {message: 'Array "coordinates" must have only 2 elements'})
-  @ArrayMaxSize(2, {message: 'Array "coordinates" must have only 2 elements'})
-  @IsNumber({}, {each: true})
-  public coordinates!: number[];
+  public coordinates!: [number, number];
 
   @IsEnum(PropertyType, {message: 'propertyType must be Apartment, House, Room or Hotel'})
   public propertyType!: PropertyType;
@@ -27,15 +23,6 @@ export default class CreateRentOfferDTO {
   @Min(100, {message: 'Minimum price is 100'})
   @Max(100000, {message: 'Maximum price is 100000'})
   public price!: number;
-
-  @IsString({message: 'preview must be string'})
-  public preview!: string;
-
-  @IsArray({message: 'Field photos must be an array'})
-  @ArrayMinSize(6, {message: 'Array "photos" must have only 6 elements'})
-  @ArrayMaxSize(6, {message: 'Array "photos" must have only 6 elements'})
-  @IsString({each: true, message: 'All elements must be string'})
-  public photos!: string[];
 
   @Min(1, {message: 'Minimum rooms is 1'})
   @Max(8, {message: 'Maximum rooms is 8'})

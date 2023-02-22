@@ -17,7 +17,8 @@ export default class RentOfferService implements RentOfferServiceInterface {
   ) {}
 
   public async create(dto: CreateRentOfferDTO): Promise<DocumentType<RentOfferEntity>> {
-    const result = await this.rentOfferModel.create(dto);
+    const createdOffer = await this.rentOfferModel.create(dto);
+    const result = await createdOffer.populate(['userId']);
     this.logger.info(`New offer created: ${dto.title}`);
 
     return result;
@@ -33,7 +34,7 @@ export default class RentOfferService implements RentOfferServiceInterface {
   public async find(count?: number): Promise<DocumentType<RentOfferEntity>[]> {
     return this.rentOfferModel
       .find()
-      .sort({postDate: SortType.Down}) // TODO - временно для тестов. Позже заменить на createdAt
+      .sort({createdAt: SortType.Down})
       .limit(count || OfferCounts.DefaultRentOfferCount)
       .populate(['userId'])
       .exec();
@@ -42,7 +43,7 @@ export default class RentOfferService implements RentOfferServiceInterface {
   public async findPremium(): Promise<DocumentType<RentOfferEntity>[]> {
     return this.rentOfferModel
       .find({premium: true})
-      .sort({postDate: SortType.Down}) // TODO - временно для тестов. Позже заменить на createdAt
+      .sort({createdAt: SortType.Down})
       .limit(OfferCounts.PremiumCount)
       .populate(['userId'])
       .exec();
@@ -69,15 +70,24 @@ export default class RentOfferService implements RentOfferServiceInterface {
   }
 
   public async updateCommentCountAndRating(offerId: string, newRate: number): Promise<DocumentType<RentOfferEntity> | null> {
-    return this.rentOfferModel
-      .findByIdAndUpdate(offerId,
-        {$inc: {
-          numComments: 1,
-          rating: newRate
-        }, // TODO - поправить этот момент
-        },
-        {new: true}
-      ).exec();
+    const offer = await this.findById(offerId);
+    const rating = offer?.rating;
+    const numComments = offer?.numComments;
+
+    if (rating !== undefined && numComments !== undefined) {
+      const recalculatedRating = ((rating * numComments) + newRate) / (numComments + 1);
+
+      return this.rentOfferModel
+        .findByIdAndUpdate(offerId,
+          {
+            $inc: {numComments: 1},
+            $set: {rating: recalculatedRating}
+          },
+          {new: true}
+        ).exec();
+    }
+
+    return null;
   }
 
   public async exists(documentId: string): Promise<boolean> {
