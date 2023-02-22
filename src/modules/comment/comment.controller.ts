@@ -57,8 +57,8 @@ export default class CommentController extends Controller {
   public async find(
     req: Request<core.ParamsDictionary | ParamsGetOffer, object, object>,
     res: Response): Promise<void> {
-    const offerId = req.params.offerId;
-    const comments = await this.commentService.findByOfferId(offerId);
+    const {params, query} = req;
+    const comments = await this.commentService.findByOfferId(params.offerId, Number(query.limit));
     this.ok(res, fillDTO(CommentResponse, comments));
   }
 

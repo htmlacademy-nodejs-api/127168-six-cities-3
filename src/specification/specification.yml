@@ -26,11 +26,10 @@ paths:
       description: Возвращает список преложений по аренде в виде массива объектов. По умолчанию возвращает 60 предложений по аренде. Возможно запросить больше предложений, указав в запросе необходимое количество предложений по аренде.
       parameters:
         - in: query
-          name: count
+          name: limit
           schema:
             type: integer
-            minimum: 60
-            example: 100
+            example: 10
           description: Требуемое количество предложений
           required: false
 
@@ -246,8 +245,8 @@ paths:
     get:
       tags:
         - comments
-      summary: Получение списка комментариев к предложению
-      description: Возвращает список комментариев для предложения с идентификатором offerId.
+      summary: Получение списка комментариев к предложению.
+      description: Возвращает список комментариев для предложения с идентификатором offerId. Стандартно возвращает 50 комментариев. Можно выбрать количество вручную с помощью запроса limit
       parameters:
         - in: path
           name: offerId
@@ -256,6 +255,13 @@ paths:
             type: string
             example: 63c95f619aec98932211d596
           description: Идентификатор объявления
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            example: 10
+          description: Требуемое количество комментариев
+          required: false
 
       responses:
         "200":

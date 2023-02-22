@@ -1,7 +1,7 @@
 # Комментарии
 ## Получить список комментариев
 
-GET http://localhost:7777/comments/63d6cfe9344cbe4504b5125d HTTP/1.1
+GET http://localhost:7777/comments/63f5f8de0f739ed224f783ac?limit=2 HTTP/1.1
 Content-Type: application/json
 
 ###
