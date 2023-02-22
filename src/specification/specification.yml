@@ -135,6 +135,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/rentOfferFull'
 
+        "400":
+          description: Идентификатор написан неверно.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidObjectID'
+
         "404":
           description: Предложение offerId не обнаружено
           content:
