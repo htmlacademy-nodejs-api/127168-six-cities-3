@@ -566,18 +566,18 @@ paths:
               schema:
                 $ref: '#/components/schemas/unauthorizedUser'
 
-  /favorites/{offerId}/{status}:
-    patch:
+  /favorites/{offerId}:
+    post:
       tags:
         - favorites
-      summary: Изменение статуса избранного объявления
-      description: Добавление или удаление предложения в/из избранного. Возвращает предложение с идентификатором offerId с актуальным состоянием поля isFavorite
+      summary: Добавление объявления в избранное
+      description: Добавить в избранное
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
@@ -588,24 +588,71 @@ paths:
             type: string
             example: 63c95f619aec98932211d596
           description: Идентификатор предложения по аренде
-        - in: path
-          name: status
-          required: true
-          schema:
-            type: number
-            example: 1
-          description: Статус избранного предложения по аренде. 1 - добавить в избранное, 0 - удалить из избранного
 
       responses:
         "200":
-          description: Предложение по аренде отредактированно. Объект предложения
+          description: Предложение об аренде добавлено в избранное
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/rentOfferFull'
 
         "400":
-          description: Невалидные данные.
+          description: Опечатка в offerId.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/invalidData'
+
+        "401":
+          description: Пользователь не авторизован.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/unauthorizedUser'
+
+        "404":
+          description: Предложение offerId не обнаружено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/notFoundData'
+
+        "409":
+          description: Предложение уже добавлено в избранное
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/conflictData'
+
+    delete:
+      tags:
+        - favorites
+      summary: Удаление объявления из избранного
+      description: Удалить из избранного
+      parameters:
+        - in: header
+          name: Authorization
+          schema:
+            type: string
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
+          description: Токен авторизации
+          required:
+            true
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор предложения по аренде
+
+      responses:
+        "204":
+          description: Предложение об аренде удалено из избранного
+
+        "400":
+          description: Опечатка в offerId.
           content:
             application/json:
               schema:
@@ -980,7 +1027,7 @@ components:
 
         message:
           type: string
-          example: User with email «newuser@gmail.com» exists.
+          example: Document exists.
 
         details:
           type: array
