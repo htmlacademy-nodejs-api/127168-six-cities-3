@@ -195,6 +195,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/unauthorizedUser'
 
+        "403":
+          description: Доступ запрещён.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/forbiddenResponse'
+
         "404":
           description: Предложение offerId не обнаружено
           content:
@@ -983,6 +990,22 @@ components:
         message:
           type: string
           example: Not found.
+
+        details:
+          type: array
+          example: []
+
+    forbiddenResponse:
+      type: object
+
+      properties:
+        errorType:
+          type: string
+          example: COMMON_ERROR
+
+        message:
+          type: string
+          example: User newuser@gmail.com cannot edit offer 63f5f8de0f739ed224f783ac
 
         details:
           type: array

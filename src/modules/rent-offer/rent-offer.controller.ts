@@ -21,6 +21,7 @@ import { ConfigInterface } from '../../common/config/config.interface.js';
 import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
 import UploadPreviewResponse from './response/upload-preview.response.js';
 import { CityCoordinates } from '../../common/rent-offer-generator/rent-offer-generator.const.js';
+import { CheckOfferAndUserMiddleware } from '../../common/middlewares/check-offer-and-user.middleware.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -70,7 +71,8 @@ export default class RentOfferController extends Controller {
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new ValidateDtoMiddleware(UpdateRentOfferDTO),
-        new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
+        new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId'),
+        new CheckOfferAndUserMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
       ]});
     this.addRoute({
       path: '/:offerId',
@@ -79,7 +81,8 @@ export default class RentOfferController extends Controller {
       middlewares: [
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
-        new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
+        new DocumentExistsMiddleware(this.rentOfferService, 'Rent offer', 'offerId'),
+        new CheckOfferAndUserMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
       ]
     });
     this.addRoute({
@@ -90,6 +93,7 @@ export default class RentOfferController extends Controller {
         new PrivateRouteMiddleware(),
         new ValidateObjectIdMiddleware('offerId'),
         new UploadFileMiddleware(this.configService.get('UPLOAD_DIRECTORY'), 'image'),
+        new CheckOfferAndUserMiddleware(this.rentOfferService, 'Rent offer', 'offerId')
       ]
     });
   }
@@ -140,11 +144,9 @@ export default class RentOfferController extends Controller {
     req: Request<core.ParamsDictionary | ParamsGetOffer, Record<string, unknown>, UpdateRentOfferDTO>,
     res: Response
   ): Promise<void> {
-    const {body} = req;
-    const offerId = req.params.offerId;
-    const updatedOffer = await this.rentOfferService.updateById(offerId, body);
-    const updatedOfferResponse = fillDTO(RentOfferFullResponse, updatedOffer);
-    this.ok(res, updatedOfferResponse);
+    const {body, params} = req;
+    const updatedOffer = await this.rentOfferService.updateById(params.offerId, body);
+    this.ok(res, fillDTO(RentOfferFullResponse, updatedOffer));
   }
 
   public async delete(
