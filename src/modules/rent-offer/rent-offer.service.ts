@@ -70,15 +70,24 @@ export default class RentOfferService implements RentOfferServiceInterface {
   }
 
   public async updateCommentCountAndRating(offerId: string, newRate: number): Promise<DocumentType<RentOfferEntity> | null> {
-    return this.rentOfferModel
-      .findByIdAndUpdate(offerId,
-        {$inc: {
-          numComments: 1,
-          rating: newRate
-        }, // TODO - поправить этот момент
-        },
-        {new: true}
-      ).exec();
+    const offer = await this.findById(offerId);
+    const rating = offer?.rating;
+    const numComments = offer?.numComments;
+
+    if (rating !== undefined && numComments !== undefined) {
+      const recalculatedRating = ((rating * numComments) + newRate) / (numComments + 1);
+
+      return this.rentOfferModel
+        .findByIdAndUpdate(offerId,
+          {
+            $inc: {numComments: 1},
+            $set: {rating: recalculatedRating}
+          },
+          {new: true}
+        ).exec();
+    }
+
+    return null;
   }
 
   public async exists(documentId: string): Promise<boolean> {

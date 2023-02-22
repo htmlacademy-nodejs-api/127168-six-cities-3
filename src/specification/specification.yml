@@ -284,7 +284,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/notFoundData'
 
-  /comments:
     post:
       tags:
         - comments
@@ -292,13 +291,20 @@ paths:
       description: Добавляет новый комментарий для предложения с идентификатором offerId.
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
+        - in: path
+          name: offerId
+          required: true
+          schema:
+            type: string
+            example: 63c95f619aec98932211d596
+          description: Идентификатор объявления
 
       requestBody:
         description: Данные по новому комментарию.
@@ -789,7 +795,6 @@ components:
         numGuests:
           type: number
           example: 5
-
 
     newComment:
       type: object
