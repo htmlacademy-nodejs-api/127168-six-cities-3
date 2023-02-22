@@ -20,6 +20,7 @@ import { PrivateRouteMiddleware } from '../../common/middlewares/private-route.m
 import { ConfigInterface } from '../../common/config/config.interface.js';
 import { UploadFileMiddleware } from '../../common/middlewares/upload-file.middleware.js';
 import UploadPreviewResponse from './response/upload-preview.response.js';
+import { CityCoordinates } from '../../common/rent-offer-generator/rent-offer-generator.const.js';
 
 type ParamsGetOffer = {
   offerId: string;
@@ -108,9 +109,13 @@ export default class RentOfferController extends Controller {
     res: Response
   ): Promise<void> {
     const {body, user} = req;
-    const newOffer = await this.rentOfferService.create({...body, userId: user.id});
-    const newOfferResponse = fillDTO(RentOfferFullResponse, newOffer);
-    this.created(res, newOfferResponse);
+    const newOffer = await this.rentOfferService.create(
+      {
+        ...body,
+        coordinates: CityCoordinates[body.city] as [number, number],
+        userId: user.id
+      });
+    this.created(res, fillDTO(RentOfferFullResponse, newOffer));
   }
 
   public async findPremium(
@@ -128,8 +133,7 @@ export default class RentOfferController extends Controller {
   ): Promise<void> {
     const offerId = req.params.offerId;
     const offer = await this.rentOfferService.findById(offerId);
-    const offerResponse = fillDTO(RentOfferFullResponse, offer);
-    this.ok(res, offerResponse);
+    this.ok(res, fillDTO(RentOfferFullResponse, offer));
   }
 
   public async update(

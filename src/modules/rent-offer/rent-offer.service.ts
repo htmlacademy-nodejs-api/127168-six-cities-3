@@ -17,7 +17,8 @@ export default class RentOfferService implements RentOfferServiceInterface {
   ) {}
 
   public async create(dto: CreateRentOfferDTO): Promise<DocumentType<RentOfferEntity>> {
-    const result = await this.rentOfferModel.create(dto);
+    const createdOffer = await this.rentOfferModel.create(dto);
+    const result = await createdOffer.populate(['userId']);
     this.logger.info(`New offer created: ${dto.title}`);
 
     return result;
@@ -33,7 +34,7 @@ export default class RentOfferService implements RentOfferServiceInterface {
   public async find(count?: number): Promise<DocumentType<RentOfferEntity>[]> {
     return this.rentOfferModel
       .find()
-      .sort({postDate: SortType.Down}) // TODO - временно для тестов. Позже заменить на createdAt
+      .sort({createdAt: SortType.Down})
       .limit(count || OfferCounts.DefaultRentOfferCount)
       .populate(['userId'])
       .exec();
@@ -42,7 +43,7 @@ export default class RentOfferService implements RentOfferServiceInterface {
   public async findPremium(): Promise<DocumentType<RentOfferEntity>[]> {
     return this.rentOfferModel
       .find({premium: true})
-      .sort({postDate: SortType.Down}) // TODO - временно для тестов. Позже заменить на createdAt
+      .sort({createdAt: SortType.Down})
       .limit(OfferCounts.PremiumCount)
       .populate(['userId'])
       .exec();

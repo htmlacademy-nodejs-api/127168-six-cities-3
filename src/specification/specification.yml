@@ -55,10 +55,10 @@ paths:
       description: Возвращает новое предложение по аренде с идентификатором offerId.
       parameters:
         - in: header
-          name: X-Token
+          name: Authorization
           schema:
             type: string
-            example: T2xpdmVyLmNvbm5lckBnbWFpbC5jb20
+            example: Bearer eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjYzZjRlN2QyZmQ3YTBkNDQzNzliODk0YSIsInVzZXJuYW1lIjoiTmV3X1VzZXIiLCJlbWFpbCI6Im5ld3VzZXJAZ21haWwuY29tIiwidXNlclN0YXR1cyI6IlBybyIsImlhdCI6MTY3NzAwMzI3NiwiZXhwIjoxNjc3MTc2MDc2fQ.xiBbW3zYFlzTO15uzzLkliGkmysZyxI--sUXfn_xwZs
           description: Токен авторизации
           required:
             true
@@ -748,23 +748,6 @@ components:
           type: number
           example: 2026
 
-        preview:
-          type: string
-          example: preview002.jpg
-
-        photos:
-          type: array
-          items:
-            type: string
-          example: [
-            photo002-000.jpg,
-            photo002-001.jpg,
-            photo002-002.jpg,
-            photo002-003.jpg,
-            photo002-004.jpg,
-            photo002-005.jpg
-          ]
-
         numRooms:
           type: number
           example: 4
@@ -782,10 +765,6 @@ components:
         premium:
           type: boolean
           example: false
-
-        favorite:
-          type: boolean
-          example: true
 
     modifiedRentOffer:
       type: object
@@ -980,16 +959,16 @@ components:
 
         message:
           type: string
-          example: Validation error /register
+          example: Validation error
 
         details:
           type: array
           example: [
             {
-              property: "userStatus",
-              value: "Pr",
+              property: "poperty",
+              value: "some poperty value",
               messages: [
-              "type must be Standart or Pro"
+              "value must be valid"
               ]
             }
           ]
