@@ -9,7 +9,7 @@
   ],
   "main": "main.js",
   "scripts": {
-    "cli": "npm run ts ./src/cli.ts",
+    "cli": "npm run ts ./src/cli.ts --",
     "start": "npm run build && node ./dist/main.js",
     "start:dev": "nodemon",
     "build": "npm run clean && npm run compile",
