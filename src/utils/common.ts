@@ -15,8 +15,8 @@ import { DEFAULT_STATIC_IMAGES } from '../app/application.constant.js';
 export const createRentOffer = (row: string): RentOffer => {
   const tokens = row.replace('\n', '').split('\t');
   const [
-    title, description, postDate, city, preview,
-    photos, premium, favorite, rating, propertyType,
+    title, description, city, preview,
+    photos, premium, rating, propertyType,
     numRooms, numGuests, price, amenities, numComments,
     coordinates, username, email, avatar, password, userStatus
   ] = tokens;
@@ -24,12 +24,10 @@ export const createRentOffer = (row: string): RentOffer => {
   return {
     title,
     description,
-    postDate: new Date(postDate),
     city: City[city as keyof typeof City],
     preview,
     photos: photos.split(';'),
     premium: JSON.parse(premium),
-    favorite: JSON.parse(favorite),
     rating: Number.parseFloat(String(rating)),
     propertyType: PropertyType[propertyType as keyof typeof PropertyType],
     numRooms: Number.parseInt(numRooms, 10),

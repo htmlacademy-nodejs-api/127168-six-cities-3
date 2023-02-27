@@ -6,12 +6,10 @@ import { User } from './user.type.js';
 export type RentOffer = {
   title: string;
   description: string;
-  postDate: Date;
   city: City;
   preview: string;
   photos: string[];
   premium: boolean;
-  favorite: boolean;
   rating: number;
   propertyType: PropertyType;
   numRooms: number;
