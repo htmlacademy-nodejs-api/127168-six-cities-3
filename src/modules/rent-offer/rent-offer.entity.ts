@@ -41,8 +41,11 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
   })
   public city!: City;
 
-  @prop({required: true})
-  public coordinates!: [number, number];
+  @prop({
+    type: Number,
+    required: true
+  })
+  public coordinates!: number[];
 
   @prop({
     required: true,
@@ -67,7 +70,10 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
   @prop({default: ''})
   public preview!: string;
 
-  @prop({default: []})
+  @prop({
+    type: String,
+    default: []
+  })
   public photos!: string[];
 
   @prop({
@@ -84,7 +90,10 @@ export class RentOfferEntity extends defaultClasses.TimeStamps {
   })
   public numGuests!: number;
 
-  @prop({required: true})
+  @prop({
+    type: String,
+    required: true
+  })
   public amenities!: string[];
 
   @prop({required: true})

@@ -1,14 +1,12 @@
 import {
   CityCoordinates,
   CommentsInterval,
-  DaysInterval,
   GuestsInterval,
   PriceInterval,
   RatingInterval,
   RoomsInterval
 } from './rent-offer-generator.const.js';
 import { convertNumWithPads } from '../../utils/converting.js';
-import dayjs from 'dayjs';
 import {
   generateRandomDecimal,
   getRandomBoolean,
@@ -33,7 +31,6 @@ export default class RentOfferGenerator implements RentOfferGeneratorInterface {
 
     const title = getRandomItem<string>(this.mockData.titles);
     const description = getRandomItem<string>(this.mockData.descriptions);
-    const postDate = dayjs().subtract(generateRandomDecimal(DaysInterval.FirstDay, DaysInterval.LastDay), 'day').toISOString();
     const city = getRandomItem<string>(this.mockData.cities);
     const preview = `preview${offerNumber}.jpg`;
     const photos = Array.from(
@@ -42,7 +39,6 @@ export default class RentOfferGenerator implements RentOfferGeneratorInterface {
         `photo${offerNumber}-${convertNumWithPads(index, NUM_PADS)}.jpg`
     ).join(';');
     const premium = getRandomBoolean().toString();
-    const favorite = getRandomBoolean().toString();
     const rating = generateRandomDecimal(RatingInterval.MinRating, RatingInterval.MaxRating, NUM_AFTER_DIGIT).toString();
     const propertyType = getRandomItem<string>(this.mockData.propertyTypes);
     const numRooms = generateRandomDecimal(RoomsInterval.MinRooms, RoomsInterval.MaxRooms).toString();
@@ -58,8 +54,8 @@ export default class RentOfferGenerator implements RentOfferGeneratorInterface {
     const userStatus = getRandomItem<string>([UserStatus.Standart, UserStatus.Pro]);
 
     return [
-      title, description, postDate, city, preview,
-      photos, premium, favorite, rating, propertyType,
+      title, description, city, preview,
+      photos, premium, rating, propertyType,
       numRooms, numGuests, price, amenities, numComments,
       coordinates, username, email, avatar, password, userStatus
     ].join('\t');
