@@ -14,8 +14,7 @@ import TSVFileReader from '../common/file-reader/tsv-file-reader.js';
 import { UserModel } from '../modules/user/user.entity.js';
 import { UserServiceInterface } from '../modules/user/user-service.interface.js';
 import UserService from '../modules/user/user.service.js';
-
-const DEFAULT_DB_PORT = 27017;
+import ConfigService from '../common/config/config.service.js';
 
 export default class ImportCommand implements CliCommandInterface {
   public readonly name = '--import';
@@ -23,6 +22,7 @@ export default class ImportCommand implements CliCommandInterface {
   private rentOfferService!: RentOfferServiceInterface;
   private databaseService!: DatabaseInterface;
   private logger!: LoggerInterface;
+  private configService!: ConfigService;
   private salt!: string;
 
   constructor() {
@@ -30,6 +30,7 @@ export default class ImportCommand implements CliCommandInterface {
     this.onComplete = this.onComplete.bind(this);
 
     this.logger = new ConsoleLoggerService();
+    this.configService = new ConfigService(this.logger);
     this.rentOfferService = new RentOfferService(this.logger, RentOfferModel);
     this.userService = new UserService(this.logger, UserModel);
     this.databaseService = new DatabaseService(this.logger);
@@ -40,9 +41,7 @@ export default class ImportCommand implements CliCommandInterface {
 
     await this.rentOfferService.create({
       ...rentOffer,
-      userId: user.id,
-      numComments: 0,
-      rating: 0
+      userId: user.id
     });
   }
 
@@ -58,14 +57,16 @@ export default class ImportCommand implements CliCommandInterface {
   }
 
   public async execute(
-    filename: string,
-    login: string,
-    password: string,
-    host: string,
-    dbname: string,
-    salt: string
+    filename: string
   ): Promise<void> {
-    const uri = getURI(login, password, host, DEFAULT_DB_PORT, dbname);
+    const login = this.configService.get('DB_USER');
+    const password = this.configService.get('DB_PASSWORD');
+    const host = this.configService.get('DB_HOST');
+    const dbPort = this.configService.get('DB_PORT');
+    const dbName = this.configService.get('DB_NAME');
+    const salt = this.configService.get('SALT');
+
+    const uri = getURI(login, password, host, dbPort, dbName);
     this.salt = salt;
 
     await this.databaseService.connect(uri);
